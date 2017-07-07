@@ -1,0 +1,9 @@
+[submodule "apps/test-app"]
+	path = apps/test-app
+	url = https://github.com/Gibs13/test-app.git
+[submodule "apps/minecraft-trivia-game"]
+	path = apps/minecraft-trivia-game
+	url = https://github.com/Gibs13/minecraft-trivia-game.git
+[submodule "apps/number-genie"]
+	path = apps/number-genie
+	url = https://github.com/Gibs13/number-genie.git
