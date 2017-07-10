@@ -304,7 +304,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
 function testRestaurant(response, restaurantslot) {
     if (!restaurantslot && !response.session('restaurant')) {
-        response.say("What time ?");
+        response.say("What restaurant ?");
+        response.session('required',1);
         return;
     } else if (restaurantslot) {
         response.session('restaurant',restaurantslot);
@@ -313,37 +314,38 @@ function testRestaurant(response, restaurantslot) {
 
 function testDate(response, dateslot) {
     if (!dateslot && !response.session('date')) {
-        response.say("What time ?");
+        response.say("What date ?");
+        response.session('required',1);
         return;
     } else if (dateslot) {
         response.session('date',dateslot);
     }
 }
 
-function testTime (response, timeslot) {  
-    let time = request.slot('timeslot');
+function testTime(response, timeslot) {  
     if (!timeslot && !response.session('time')) {
         response.say("What time ?");
+        response.session('required',1);
         return;
     } else if (timeslot) {
         response.session('time',timeslot.toUpperCase());
     }
 }
 
-function testNumber (response, numberslot) {
-    let time = request.slot('timeslot');
+function testNumber(response, numberslot) {
     if (!numberslot && !response.session('number')) {
-        response.say("What time ?");
+        response.say("What number ?");
+        response.session('required',1);
         return;
     } else if (numberslot) {
         response.session('places',parseInt(numberslot));
     }
 }
 
-function testName (response, nameslot) {
-    let time = request.slot('timeslot');
+function testName(response, nameslot) {
     if (!nameslot && !response.session('name')) {
-        response.say("What time ?");
+        response.say("What name ?");
+        response.session('required',1);
         return;
     } else if (nameslot) {
         response.session('name',nameslot);
@@ -374,31 +376,37 @@ app.launch(function( request, response ) {
 } );
 
 app.intent('Changerestaurant', function changedresto(request, response) {
+    response.session('required',0);
     testRestaurant(response,request.slot('restaurantslot'));
     response.session('cr',1);
 });
 
 app.intent('Changedate', function changeddate(request, response) {
+    response.session('required',0);
     testDate(response,request.slot('dateslot'));
     response.session('cd',1);
 });
 
 app.intent('Changetime', function changedtime(request, response) {
     testTime(response,request.slot('timeslot'));
+    response.session('required',0);
     response.session('ct',1);
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
+    response.session('required',0);
     testNumber(response,request.slot('numberslot'));
     response.session('cn',1);
 });
 
 app.intent('Changename', function changedname(request, response) {
+    response.session('required',0);
     testName(response,request.slot('nameslot'));
     response.session('cln',1);
 });
 
 app.intent('Reserve', function informations(request, response) {
+        response.session('required',0);
         testRestaurant(response,request.slot('restaurantslot'));
         testDate(response,request.slot('dateslot'));
         testTime(response,request.slot('timeslot'));
@@ -413,6 +421,10 @@ app.intent('Reserve', function informations(request, response) {
 
 function reserve (request, response) {
 
+
+        if (response.session('required')) {
+            return;
+        }
         response.session('proposition',false);
         response.session('message',"");
         response.session('problem',false);
