@@ -408,19 +408,49 @@ app.intent('Changename', function changedname(request, response) {
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
     
-    response.response.response ={"speechletResponse":
+    response.response.response =
     {
       "directives": [
       {
         "type": "Dialog.Delegate ",
         "updatedIntent": {
             "name": "Reserve",
-            "confirmationStatus": "NONE"
+            "confirmationStatus": "NONE",
+            "slots": {
+                "restaurantslot": {
+                "name": "restaurantslot",
+                "confirmationStatus": "NONE"
+                }
+            },
+            "slots": {
+                "dateslot": {
+                "name": "dateslot",
+                "confirmationStatus": "NONE"
+                }
+            },
+            "slots": {
+                "timeslot": {
+                "name": "timeslot",
+                "confirmationStatus": "NONE"
+                }
+            },
+            "slots": {
+                "numberslot": {
+                "name": "numberslot",
+                "confirmationStatus": "NONE"
+                }
+            },
+            "slots": {
+                "nameslot": {
+                "name": "nameslot",
+                "confirmationStatus": "NONE"
+                }
+            }
         }
       }
     ],
       "shouldEndSession": false
-    }};
+    };
     console.log(JSON.stringify(response.response));
     return response.send()
 
