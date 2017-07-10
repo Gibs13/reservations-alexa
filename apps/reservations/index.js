@@ -401,7 +401,13 @@ app.intent('Changename', function changedname(request, response) {
 });
 
 app.intent('Reserve', function informations(request, response) {
-        if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
+    response.response.directives = [
+      {
+        "type": "Dialog.ElicitSlot",
+        "slotToElicit": "fromCity"}];
+    return response.send()
+
+    /*    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
         if(testDate(response,request.slot('dateslot'))) {return;}
         if(testTime(response,request.slot('timeslot'))) {return;}
         if(testNumber(response,request.slot('numberslot'))) {return;}
@@ -410,7 +416,7 @@ app.intent('Reserve', function informations(request, response) {
         response.session('cr',1);
         response.session('cln',1);
         response.session('cn',1);
-        response.session('ct',1);
+        response.session('ct',1); */
 });
 
 function reserve (request, response) {
