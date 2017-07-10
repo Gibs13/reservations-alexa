@@ -408,7 +408,7 @@ app.intent('Changename', function changedname(request, response) {
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
     
-    response.response.speechletResponse =
+    response.response.response.speechletResponse =
     {
       "directives": [
       {
