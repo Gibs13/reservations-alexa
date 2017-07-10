@@ -401,7 +401,7 @@ app.intent('Changename', function changedname(request, response) {
 });
 
 app.intent('Reserve', function informations(request, response) {
-    response.directives = [
+    response.response.directives = [
       { "type": "Dialog.ElicitSlot",
         "slotToElicit": "fromCity"}];
         console.log(JSON.stringify(response));
