@@ -401,10 +401,49 @@ app.intent('Changename', function changedname(request, response) {
 });
 
 app.intent('Reserve', function informations(request, response) {
-    response.response.directives = [
-      { "type": "Dialog.ElicitSlot",
-        "slotToElicit": "fromCity"}];
-    response.resolved = true;
+    response.response = {
+  "version": "1.0",
+  "sessionAttributes": {},
+  "response": {
+    "outputSpeech": {
+      "type": "PlainText",
+      "text": "What's the restaurant ?"
+    },
+    "shouldEndSession": false,
+    "directives": [
+      {
+        "type": "Dialog.ElicitSlot",
+        "slotToElicit": "restaurantslot",
+        "updatedIntent": {
+          "name": "Reserve",
+          "confirmationStatus": "NONE",
+          "slots": {
+            "dateslot": {
+              "name": "dateslot",
+              "confirmationStatus": "NONE"
+            },
+            "timeslot": {
+              "name": "timeslot",
+              "confirmationStatus": "NONE"
+            },
+            "restaurantslot": {
+              "name": "restaurantslot",
+              "confirmationStatus": "NONE"
+            },
+            "numberslot": {
+              "name": "numberslot",
+              "confirmationStatus": "NONE"
+            },
+            "nameslot": {
+              "name": "nameslot",
+              "confirmationStatus": "NONE"
+            }
+          }
+        }
+      }
+    ]
+  }
+};
     console.log(JSON.stringify(response));
     return response.send()
 
