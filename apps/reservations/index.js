@@ -408,11 +408,16 @@ app.intent('Changename', function changedname(request, response) {
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
     
-    response.response.directives = [
+    response.response = {
+    "speechletResponse": {
+      "directives": [
       {
         "type": "Dialog.Delegate "
       }
-    ];
+    ],
+      "shouldEndSession": true
+    }
+  };
     console.log(JSON.stringify(response));
     return response.send()
 
