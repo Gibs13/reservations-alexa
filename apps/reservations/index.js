@@ -309,7 +309,26 @@ function testTime(timebis) {
         
 }
 
-function testDate(datebis) {
+function testDate(response, datebis) {
+        if (datebis == "today") {
+            response.session('date',todayNormalized);
+        } else if (isNaN(parseInt(datebis))) {
+            response.session('problem',"What was the date ? ");
+        } else {
+            response.session('date',datebis);
+        }
+        let date = response.session('date');
+}
+
+function testTime (response, timebis) {
+    if (timebis && !isNaN(parseInt(timebis))) {
+        response.session('time',timebis.substring(0,5));
+    } else {
+        response.session('problem',"At what time you wanted to reserve ? ");
+    }
+}
+
+function testNumber (response, number) {
 
 }
 
@@ -333,40 +352,39 @@ app.launch(function( request, response ) {
 
     response.session('state',WELCOME_STATE);
     response.shouldEndSession(false).say(R(WELCOME));
-	response.say('Welcome, say start to begin the game.').shouldEndSession( false );
 } );
 
 app.intent('Changerestaurant', function changedresto(request, response) {
-    response.session('restaurant',request.slot('resto').toUpperCase());
+    response.session('restaurant',request.slot('restaurantslot').toUpperCase());
     response.session('cr',request.slot('cr'));
 });
 
 app.intent('Changedate', function changeddate(request, response) {
-    let datebis = request.slot('datebis');
+    testDate(response,request.slot('dateslot'));
     response.session('cd',request.slot('cd'));
 });
 
 app.intent('Changetime', function changedtime(request, response) {
-    let timebis = request.slot('timebis');
+    testTime(response,request.slot('timeslot'));
     response.session('ct',request.slot('ct'));
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
-    response.session('places',parseInt(request.slot('number')));
+    response.session('places',parseInt(request.slot('numberslot')));
     response.session('cn',request.slot('cn'));
 });
 
 app.intent('Changename', function changedname(request, response) {
-    response.session('name',request.slot('last-name'));
+    response.session('name',request.slot('nameslot'));
     response.session('cln',request.slot('cln'));
 });
 
 app.intent( 'Reserve', function informations(request, response) {
-    response.session('restaurant',request.slot('resto').toUpperCase());
-        let datebis = request.slot('datebis');
-        let timebis = request.slot('timebis');
-        response.session('name',request.slot('last-name'));
-        response.session('places',parseInt(request.slot('number')));
+        response.session('restaurant',request.slot('restaurantslot').toUpperCase());
+        testDate(response,request.slot('dateslot'));
+        testTime(response,request.slot('timeslot'));
+        response.session('name',request.slot('nameslot'));
+        response.session('places',parseInt(request.slot('numberslot')));
         response.session('cd',request.slot('cd'));
         response.session('cr',request.slot('cr'));
         response.session('cln',request.slot('cln'));
@@ -394,21 +412,13 @@ function reserve (request, response) {
             response.shouldEndSession(false).say("I don't know this restaurant. ");
             return;
         }
+        if (isNaN(response.session('places'))) {
+            response.session('problem',"I didn't understand the number of persons. ");
+        }
 
         confirmation(response);
-        });
-
-        if (isNaN(response.session('places'))) {
-                response.session('problem',"I didn't understand the number of persons. ");
-            }
-
+        });        
         
-        
-        if (timebis && !isNaN(parseInt(timebis))) {
-            response.session('time',timebis.substring(0,5));
-        } else {
-            response.session('problem',"At what time you wanted to reserve ? ");
-        }
     }
 
     app.intent('YesIntent', function yes (request, response) {
