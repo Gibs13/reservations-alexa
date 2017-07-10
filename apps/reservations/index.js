@@ -412,7 +412,11 @@ function informations(request, response) {
     {
       "directives": [
       {
-        "type": "Dialog.Delegate "
+        "type": "Dialog.Delegate ",
+        "updatedIntent": {
+            "name": "Reserve",
+            "confirmationStatus": "NONE"
+        }
       }
     ],
       "shouldEndSession": false
