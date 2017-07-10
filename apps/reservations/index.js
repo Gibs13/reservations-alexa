@@ -308,6 +308,7 @@ function testRestaurant(response, restaurantslot) {
         return 1;
     } else if (restaurantslot) {
         response.session('restaurant',restaurantslot);
+        response.session('cr',1);
     }
     return 0;
 }
@@ -318,6 +319,7 @@ function testDate(response, dateslot) {
         return 1;
     } else if (dateslot) {
         response.session('date',dateslot);
+        response.session('cd',1);
     }
     return 0;
 }
@@ -328,6 +330,7 @@ function testTime(response, timeslot) {
         return 1;
     } else if (timeslot) {
         response.session('time',timeslot.toUpperCase());
+        response.session('ct',1);
     }
     return 0;
 }
@@ -338,6 +341,7 @@ function testNumber(response, numberslot) {
         return 1;
     } else if (numberslot) {
         response.session('places',parseInt(numberslot));
+        response.session('cn',1);
     }
     return 0;
 }
@@ -348,6 +352,7 @@ function testName(response, nameslot) {
         return 1;
     } else if (nameslot) {
         response.session('name',nameslot);
+        response.session('cln',1);
     }
     return 0;
 }
@@ -378,122 +383,65 @@ app.launch(function( request, response ) {
 app.intent('Changerestaurant', function changedresto(request, response) {
     response.session('state',RESERVE_STATE);
     if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
-    response.session('cr',1);
 });
 
 app.intent('Changedate', function changeddate(request, response) {
     response.session('state',RESERVE_STATE);
     if(testDate(response,request.slot('dateslot'))) {return;}
-    response.session('cd',1);
 });
 
 app.intent('Changetime', function changedtime(request, response) {
     response.session('state',RESERVE_STATE);
     if(testTime(response,request.slot('timeslot'))) {return;}
-    response.session('ct',1);
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
     response.session('state',RESERVE_STATE);
     if(testNumber(response,request.slot('numberslot'))) {return;}
-    response.session('cn',1);
 });
 
 app.intent('Changename', function changedname(request, response) {
     response.session('state',RESERVE_STATE);
     if(testName(response,request.slot('nameslot'))) {return;}
-    response.session('cln',1);
 });
 
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
-    
-    response.response.response =
-    {
-      "directives": [
-      {
-        "type": "Dialog.Delegate ",
-        "updatedIntent": {
-            "name": "Reserve",
-            "confirmationStatus": "NONE",
-            "slots": {
-                "restaurantslot": {
-                "name": "restaurantslot",
-                "confirmationStatus": "NONE"
-                }
-            },
-            "slots": {
-                "dateslot": {
-                "name": "dateslot",
-                "confirmationStatus": "NONE"
-                }
-            },
-            "slots": {
-                "timeslot": {
-                "name": "timeslot",
-                "confirmationStatus": "NONE"
-                }
-            },
-            "slots": {
-                "numberslot": {
-                "name": "numberslot",
-                "confirmationStatus": "NONE"
-                }
-            },
-            "slots": {
-                "nameslot": {
-                "name": "nameslot",
-                "confirmationStatus": "NONE"
-                }
-            }
-        }
-      }
-    ],
-      "shouldEndSession": false
-    };
-    console.log(JSON.stringify(response.response));
-    return response.send()
 
-    /*    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
-        if(testDate(response,request.slot('dateslot'))) {return;}
-        if(testTime(response,request.slot('timeslot'))) {return;}
-        if(testNumber(response,request.slot('numberslot'))) {return;}
-        if(testName(response,request.slot('nameslot'))) {return;}
-        response.session('cd',1);
-        response.session('cr',1);
-        response.session('cln',1);
-        response.session('cn',1);
-        response.session('ct',1); */
+    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
+    if(testDate(response,request.slot('dateslot'))) {return;}
+    if(testTime(response,request.slot('timeslot'))) {return;}
+    if(testNumber(response,request.slot('numberslot'))) {return;}
+    if(testName(response,request.slot('nameslot'))) {return;}
 }
 
 function reserve (request, response) {
 
 
-        response.session('proposition',false);
-        response.session('message',"");
-        response.session('problem',false);
+    response.session('proposition',false);
+    response.session('message',"");
+    response.session('problem',false);        
         
-        
 
-        let restaurant = response.session('restaurant');
-        console.log(restaurant);
+    let restaurant = response.session('restaurant');
+    console.log(restaurant);
 
-        get(restaurant,function(val) {
+    get(restaurant,function(val) {
 
-            horaires = val;
+        horaires = val;
 
-        if (!horaires) {
-            response.shouldEndSession(false).say("I don't know this restaurant. ");
-            return;
-        }
-        if (isNaN(response.session('places'))) {
-            response.session('problem',"I didn't understand the number of persons. ");
-        }
-
-        confirmation(response);
-        });        
-        
+    if (!horaires) {
+        response.shouldEndSession(false).say("I don't know this restaurant. ");
+        return;
     }
+        if (isNaN(response.session('places'))) {
+        response.session('problem',"I didn't understand the number of persons. ");
+    }
+
+    confirmation(response);
+    });        
+        
+}
 
     app.intent('YesIntent', function yes (request, response) {
         let state = response.session('state');
