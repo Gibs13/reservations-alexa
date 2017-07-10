@@ -408,7 +408,7 @@ app.intent('Changename', function changedname(request, response) {
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
     
-    response.response.response =
+    response.response.response ={"speechletResponse":
     {
       "directives": [
       {
@@ -420,8 +420,8 @@ function informations(request, response) {
       }
     ],
       "shouldEndSession": false
-    };
-    console.log(JSON.stringify(response));
+    }};
+    console.log(JSON.stringify(response.response));
     return response.send()
 
     /*    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
