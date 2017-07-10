@@ -376,74 +376,43 @@ app.launch(function( request, response ) {
 } );
 
 app.intent('Changerestaurant', function changedresto(request, response) {
+    response.session('state',RESERVE_STATE);
     if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
     response.session('cr',1);
 });
 
 app.intent('Changedate', function changeddate(request, response) {
+    response.session('state',RESERVE_STATE);
     if(testDate(response,request.slot('dateslot'))) {return;}
     response.session('cd',1);
 });
 
 app.intent('Changetime', function changedtime(request, response) {
+    response.session('state',RESERVE_STATE);
     if(testTime(response,request.slot('timeslot'))) {return;}
     response.session('ct',1);
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
+    response.session('state',RESERVE_STATE);
     if(testNumber(response,request.slot('numberslot'))) {return;}
     response.session('cn',1);
 });
 
 app.intent('Changename', function changedname(request, response) {
+    response.session('state',RESERVE_STATE);
     if(testName(response,request.slot('nameslot'))) {return;}
     response.session('cln',1);
 });
 
-app.intent('Reserve', function informations(request, response) {
-    response.response = {
-  "version": "1.0",
-  "sessionAttributes": {},
-  "response": {
-    "outputSpeech": {
-      "type": "PlainText",
-      "text": "What's the restaurant ?"
-    },
-    "shouldEndSession": false,
-    "directives": [
+function informations(request, response) {
+    response.session('state',RESERVE_STATE);
+    
+    response.response.directives = [
       {
-        "type": "Dialog.ElicitSlot",
-        "slotToElicit": "restaurantslot",
-        "updatedIntent": {
-          "name": "Reserve",
-          "confirmationStatus": "NONE",
-          "slots": {
-            "dateslot": {
-              "name": "dateslot",
-              "confirmationStatus": "NONE"
-            },
-            "timeslot": {
-              "name": "timeslot",
-              "confirmationStatus": "NONE"
-            },
-            "restaurantslot": {
-              "name": "restaurantslot",
-              "confirmationStatus": "NONE"
-            },
-            "numberslot": {
-              "name": "numberslot",
-              "confirmationStatus": "NONE"
-            },
-            "nameslot": {
-              "name": "nameslot",
-              "confirmationStatus": "NONE"
-            }
-          }
-        }
+        "type": "Dialog.Delegate "
       }
-    ]
-  }
-};
+    ];
     console.log(JSON.stringify(response));
     return response.send()
 
@@ -457,7 +426,7 @@ app.intent('Reserve', function informations(request, response) {
         response.session('cln',1);
         response.session('cn',1);
         response.session('ct',1); */
-});
+}
 
 function reserve (request, response) {
 
@@ -465,7 +434,6 @@ function reserve (request, response) {
         response.session('proposition',false);
         response.session('message',"");
         response.session('problem',false);
-        response.session('state',RESERVE_STATE);
         
         
 
@@ -539,6 +507,7 @@ function reserve (request, response) {
         
     });
 
-app.intent('Answerpropose',reserve);
+app.intent('Answerpropose',informations);
+app.intent('Reserve',informations);
 
 module.exports = app;
