@@ -404,7 +404,7 @@ app.intent('Reserve', function informations(request, response) {
     response.directives = [
       { "type": "Dialog.ElicitSlot",
         "slotToElicit": "fromCity"}];
-        console.log(response.toString())
+        console.log(JSON.stringify(response));
     return response.send()
 
     /*    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
