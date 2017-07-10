@@ -305,51 +305,51 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 function testRestaurant(response, restaurantslot) {
     if (!restaurantslot && !response.session('restaurant')) {
         response.say("What restaurant ?");
-        response.session('required',1);
-        return;
+        return 1;
     } else if (restaurantslot) {
         response.session('restaurant',restaurantslot);
     }
+    return 0;
 }
 
 function testDate(response, dateslot) {
     if (!dateslot && !response.session('date')) {
         response.say("What date ?");
-        response.session('required',1);
-        return;
+        return 1;
     } else if (dateslot) {
         response.session('date',dateslot);
     }
+    return 0;
 }
 
 function testTime(response, timeslot) {  
     if (!timeslot && !response.session('time')) {
         response.say("What time ?");
-        response.session('required',1);
-        return;
+        return 1;
     } else if (timeslot) {
         response.session('time',timeslot.toUpperCase());
     }
+    return 0;
 }
 
 function testNumber(response, numberslot) {
     if (!numberslot && !response.session('number')) {
         response.say("What number ?");
-        response.session('required',1);
-        return;
+        return 1;
     } else if (numberslot) {
         response.session('places',parseInt(numberslot));
     }
+    return 0;
 }
 
 function testName(response, nameslot) {
     if (!nameslot && !response.session('name')) {
         response.say("What name ?");
-        response.session('required',1);
-        return;
+        return 1;
     } else if (nameslot) {
         response.session('name',nameslot);
     }
+    return 0;
 }
 
     // intents
@@ -376,42 +376,36 @@ app.launch(function( request, response ) {
 } );
 
 app.intent('Changerestaurant', function changedresto(request, response) {
-    response.session('required',0);
-    testRestaurant(response,request.slot('restaurantslot'));
+    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
     response.session('cr',1);
 });
 
 app.intent('Changedate', function changeddate(request, response) {
-    response.session('required',0);
-    testDate(response,request.slot('dateslot'));
+    if(testDate(response,request.slot('dateslot'))) {return;}
     response.session('cd',1);
 });
 
 app.intent('Changetime', function changedtime(request, response) {
-    testTime(response,request.slot('timeslot'));
-    response.session('required',0);
+    if(testTime(response,request.slot('timeslot'))) {return;}
     response.session('ct',1);
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
-    response.session('required',0);
-    testNumber(response,request.slot('numberslot'));
+    if(testNumber(response,request.slot('numberslot'))) {return;}
     response.session('cn',1);
 });
 
 app.intent('Changename', function changedname(request, response) {
-    response.session('required',0);
-    testName(response,request.slot('nameslot'));
+    if(testName(response,request.slot('nameslot'))) {return;}
     response.session('cln',1);
 });
 
 app.intent('Reserve', function informations(request, response) {
-        response.session('required',0);
-        testRestaurant(response,request.slot('restaurantslot'));
-        testDate(response,request.slot('dateslot'));
-        testTime(response,request.slot('timeslot'));
-        testNumber(response,request.slot('numberslot'));
-        testName(response,request.slot('nameslot'));
+        if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
+        if(testDate(response,request.slot('dateslot'))) {return;}
+        if(testTime(response,request.slot('timeslot'))) {return;}
+        if(testNumber(response,request.slot('numberslot'))) {return;}
+        if(testName(response,request.slot('nameslot'))) {return;}
         response.session('cd',1);
         response.session('cr',1);
         response.session('cln',1);
@@ -422,9 +416,6 @@ app.intent('Reserve', function informations(request, response) {
 function reserve (request, response) {
 
 
-        if (response.session('required')) {
-            return;
-        }
         response.session('proposition',false);
         response.session('message',"");
         response.session('problem',false);
