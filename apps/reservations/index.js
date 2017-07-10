@@ -1,22 +1,18 @@
 'use strict';
 
-process.env.DEBUG = 'actions-on-google:*';
-let ApiAiApp = require('actions-on-google').ApiAiApp;
-let express = require('express');
-let bodyParser = require('body-parser');
+var alexa = require( 'alexa-app' );
+var app = new alexa.app( 'reservations' );
+
+
 let horaires = {};
-var readline = require('readline');
+
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var sheets = google.sheets('v4');
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 let descriptions = require('./descriptions.js');
+let today;
 
-let app = express();
-app.use(bodyParser.json({type: 'application/json'}));
-app.use('/images', express.static('images'));
-
-let sprintf = require('sprintf-js').sprintf;
 
 var auth = new googleAuth();
 var oauth2Client = new auth.OAuth2("801820678701-mg5qa1itum2uhave87mqpja89mo6j393.apps.googleusercontent.com", "HSXReMn_3Vs_FwpTA4QYVwAX", "urn:ietf:wg:oauth:2.0:oob");
@@ -44,21 +40,14 @@ const BYE = ["Alright then, come back soon ! ","Well, goodbye. See you soon.","Y
 const CHANGE = ["What should I change ? ","Tell me what has to be modified. ","What has to be replaced ? "];
 const NOROOM = ["There is no room ","They haven't got any seats ","It's not possible to order "];
 
-const MONTH = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const DAY = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 const IMAGE = 'https://reservation01.herokuapp.com/images/'
 
 
 // Function Handler
 
 
-app.post('/', function (req, res) {
-    const assistant = new ApiAiApp({request: req, response: res});
-    let today = new Date();
-    console.log("today : " + today.getDate()+" "+(today.getMonth()+1)+" "+today.getHours()+" "+today.getMinutes());
-
     // Pour selectionner un element d'une liste
-    function R(assistant, array) {
+    function R(array) {
         return array[Math.floor(Math.random() * (array.length))];
     }
 
@@ -134,7 +123,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     insertDataOption: "INSERT_ROWS",
     resource: {
         values: [
-            [resto + " " + assistant.data.date + " " + time + " " + places + " " + nom]]
+            [resto + " " + response.session('date') + " " + time + " " + places + " " + nom]]
         }
     }, function(err, response){
         if (err) {
@@ -147,15 +136,15 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
 
 
-    function confirmation (assistant) {
+    function confirmation (response) {
 
-        if (assistant.data.problem != false) {
-            assistant.ask(assistant.data.problem);
+        if (response.session('problem') != false) {
+            response.shouldEndSession(false).say(response.session('problem'));
             return;
         }
-        let time = assistant.data.time;
+        let time = response.session('time');
         let minutes = parseInt(time.substring(0,2))*60 + parseInt(time.substring(3,5));
-        let date = assistant.data.date;
+        let date = response.session('date');
         let T = false;
         let month = parseInt(date.substring(5,7));
         let day = parseInt(date.substring(8,10));
@@ -165,7 +154,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         while (T === false) {
 
 
-        T = disponible(date,minutes);
+        T = disponible(response, date,minutes);
         if (T === false) {
             //Pas de place ce jour
             console.log("Pas de place ce jour");
@@ -181,60 +170,60 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             date = date.substring(0,4)+'-'+('0'+month.toString()).slice(-2)+'-'+('0'+day.toString()).slice(-2);
 
         } else {
-            assistant.data.time = T;
+            response.session('time',T);
         }
 
         }  
         if (T === false) {
-            assistant.ask(R(assistant, NOROOM) + "this day and the week after. You may try another date. ");
+            response.shouldEndSession(false).say(R(NOROOM) + "this day and the week after. You may try another date. ");
             return;
         }
 
-        let message = createMessage(assistant);
+        let message = createMessage(response);
         
-        assistant.data.state = YES_NO_STATE;
-        if (assistant.data.proposition) {
-            assistant.ask(assistant.data.message + R(assistant, PROPOSITION) + message + R(assistant, AGREE));
+        response.session('state',YES_NO_STATE);
+        if (response.session('proposition')) {
+            response.shouldEndSession(false).say(response.session('message') + R(PROPOSITION) + message + R(AGREE));
             return;
         } else {
-            assistant.ask(assistant.data.message + R(assistant, READY) + message + R(assistant, FINISH));
+            response.shouldEndSession(false).say(response.session('message') + R(READY) + message + R(FINISH));
             return;
         }        
     }
 
-    function createMessage(assistant) {
-        let cd = assistant.data.cd;
-        let cr = assistant.data.cr;
-        let cln = assistant.data.cln;
-        let cn = assistant.data.cn;
-        let ct = assistant.data.ct;
-        return (cn?"for "+assistant.data.places+" person"+(assistant.data.places>1?"s ":" "):"")+(cr?"the restaurant "+assistant.data.restaurant.toLowerCase()+" ":"")+(cd?"on "+assistant.data.date.substring(5)+" ":"")+(ct?"at "+assistant.data.time+" ":"")+(cln?"with the name "+assistant.data.name+" ":"")+". ";
+    function createMessage(response) {
+        let cd = response.session('cd');
+        let cr = response.session('cr');
+        let cln = response.session('cln');
+        let cn = response.session('cn');
+        let ct = response.session('ct');
+        return (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+(cd?"on "+response.session('date').substring(5)+" ":"")+(ct?"at "+response.session('time')+" ":"")+(cln?"with the name "+response.session('name')+" ":"")+". ";
     }
 
-    function reserver (assistant) {
-        let restaurant = assistant.data.restaurant;
+    function reserver (response) {
+        let restaurant = response.session('restaurant');
         get(restaurant, function(horaires) {
             let placeRestante = parseInt(horaires[date][creneau].substring(6));
-            let places = assistant.data.places;
-            let name = assistant.data.name;
+            let places = response.session('places');
+            let name = response.session('name');
             console.log("reservation à " + horaires[date][creneau]);
             if (placeRestante-places>=0) {
-                assistant.setContext('reserve', 0);
+                response.setContext('reserve', 0);
                 console.log("valide");
                 let valeur = horaires[date][creneau].substring(0,6) + (placeRestante-places).toString();
-                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,assistant.data.time);
-                assistant.tell(R(assistant, SUCCESS) + name);
+                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'));
+                response.say(R(SUCCESS) + name);
             } else {
                 console.log("invalide");
-                assistant.ask("There was an error, the places are not available anymore. ");
+                response.shouldEndSession(false).say("There was an error, the places are not available anymore. ");
             }
         });
-        let date = assistant.data.date;
-        let creneau = assistant.data.creneau;
+        let date = response.session('date');
+        let creneau = response.session('creneau');
         console.log(restaurant + " " + date + " " + creneau);
     }
 
-    function disponible(date, time) {
+    function disponible(response, date, time) {
         let heure;
         let possibleTime = [];
         let placeRestante;
@@ -258,25 +247,29 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             // Si non, est ce que le créneau avant ou celui après est disponible 
 
             if (heure<=time && time<heure+30) {
-                if (placeRestante >= assistant.data.places) {
-                    assistant.data.creneau = i;
+                if (placeRestante >= response.session('places')) {
+                    response.session('creneau',i);
                     let rightTime;
                     if (time != heure) {
-                        if (!assistant.data.proposition) {
-                            assistant.data.message += "You can only order a bit earlier. ";
+                        if (!response.session('proposition')){
+                            let message = response.session('message');
+                            message+= "You can only order a bit earlier. ";
+                            response.session('message',message);
                         }
                     } 
                     rightTime = heure;
                     console.log("rightTime : " + rightTime);
                     return ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
                 } else {
-                    if (!assistant.data.proposition) {
-                        assistant.data.message += "There's only "+placeRestante+" seats at this hour. ";
-                        assistant.data.proposition = true;
-                        assistant.data.ct = 1;
+                    if (!response.session('proposition')) {
+                        let message = response.session('message');
+                        message += "There's only "+placeRestante+" seats at this hour. ";
+                        response.session('message',message);
+                        response.session('proposition',true);
+                        response.session(ct,1);
                     }
                 }
-            } else if (placeRestante >= assistant.data.places ) {
+            } else if (placeRestante >= response.session('places')) {
                 if (time>heure && today.getDate() != parseInt(date.substring(8,10) )) {
                     possibleTime[0] = heure;
                     possibleTime[2] = i;
@@ -289,58 +282,108 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         let rightTime;
         if (possibleTime == []) {
             return false;
-        } else if (!possibleTime[0] || assistant.data.timing==2) {
+        } else if (!possibleTime[0]) {
             rightTime = possibleTime[1];
-        } else if (!possibleTime[1] || assistant.data.timing==1) {
+        } else if (!possibleTime[1]) {
             rightTime = possibleTime[0];
         } else {
             rightTime = possibleTime[1]-time <= time-possibleTime[0] ? possibleTime[1] : possibleTime[0];
         }
-        assistant.data.creneau = rightTime == possibleTime[0] ? possibleTime[2] : possibleTime[3];
-        assistant.data.ct = 1;
+        response.session('creneau',rightTime == possibleTime[0] ? possibleTime[2] : possibleTime[3]);
+        response.session('ct',1);
         let answer = ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
         console.log("temps proposé : " + answer);
         return answer;
     }
 
+function testTime(timebis) {
+    let todayNormalized = today.getFullYear().toString()+'-'+('0' + (today.getMonth()+1).toString()).slice(-2)+'-'+('0' + (today.getDate()).toString()).slice(-2);
+    if (datebis == "today") {
+            response.session('date',todayNormalized);
+        } else if (isNaN(parseInt(datebis))) {
+            response.session('problem',"What was the date ? ");
+        } else {
+            response.session('date',datebis);
+        }
+        let date = response.session('date');
+        
+}
+
+function testDate(datebis) {
+
+}
+
     // intents
 
-    function start (assistant) {
+app.pre = function(request, response, type) {
+    today = new Date();
+    console.log("today : " + today.getDate()+" "+(today.getMonth()+1)+" "+today.getHours()+" "+today.getMinutes());
+};
+
+app.launch(function( request, response ) {
+    response.session('proposition',false);
+    response.session('message',"");
+    response.session('problem',false);
+    response.session('date',"");
+    response.session('name',"");
+    response.session('restaurant',"");
+    response.session('places',"");
+    response.session('time',"");
+
+
+    response.session('state',WELCOME_STATE);
+    response.shouldEndSession(false).say(R(WELCOME));
+	response.say('Welcome, say start to begin the game.').shouldEndSession( false );
+} );
+
+app.intent('Changerestaurant', function changedresto(request, response) {
+    response.session('restaurant',request.slot('resto').toUpperCase());
+    response.session('cr',request.slot('cr'));
+});
+
+app.intent('Changedate', function changeddate(request, response) {
+    let datebis = request.slot('datebis');
+    response.session('cd',request.slot('cd'));
+});
+
+app.intent('Changetime', function changedtime(request, response) {
+    let timebis = request.slot('timebis');
+    response.session('ct',request.slot('ct'));
+});
+
+app.intent('Changenumber', function changednumber(request, response) {
+    response.session('places',parseInt(request.slot('number')));
+    response.session('cn',request.slot('cn'));
+});
+
+app.intent('Changename', function changedname(request, response) {
+    response.session('name',request.slot('last-name'));
+    response.session('cln',request.slot('cln'));
+});
+
+app.intent( 'Reserve', function informations(request, response) {
+    response.session('restaurant',request.slot('resto').toUpperCase());
+        let datebis = request.slot('datebis');
+        let timebis = request.slot('timebis');
+        response.session('name',request.slot('last-name'));
+        response.session('places',parseInt(request.slot('number')));
+        response.session('cd',request.slot('cd'));
+        response.session('cr',request.slot('cr'));
+        response.session('cln',request.slot('cln'));
+        response.session('cn',request.slot('cn'));
+        response.session('ct',request.slot('ct'));
+});
+
+function reserve (request, response) {
+
+        response.session('proposition',false);
+        response.session('message',"");
+        response.session('problem',false);
+        response.session('state',RESERVE_STATE);
         
-        assistant.data.proposition = false;
-        assistant.data.message = "";
-        assistant.data.problem = false;
-        assistant.data.date ="";
-        assistant.data.name ="";
-        assistant.data.restaurant ="";
-        assistant.data.places="";
-        assistant.data.time ="";
-
-
-        assistant.data.state = WELCOME_STATE;
-        assistant.ask(R(assistant, WELCOME));
-    }
-
-    function reserve (assistant) {
-
-        assistant.data.proposition = false;
-        assistant.data.message = "";
-        assistant.data.problem = false;
-        assistant.data.state = RESERVE_STATE;
         
-        assistant.data.restaurant = assistant.getContextArgument('reserve','resto').value.toUpperCase();
-        let datebis = assistant.getContextArgument('reserve','datebis').value;
-        let timebis = assistant.getContextArgument('reserve','timebis').value;
-        assistant.data.name = assistant.getContextArgument('reserve','last-name').value;
-        assistant.data.places = parseInt(assistant.getContextArgument('reserve','number').value);
-        let todayNormalized = today.getFullYear().toString()+'-'+('0' + (today.getMonth()+1).toString()).slice(-2)+'-'+('0' + (today.getDate()).toString()).slice(-2);
-        assistant.data.cd = assistant.getContextArgument('reserve','cd').value;
-        assistant.data.cr = assistant.getContextArgument('reserve','cr').value;
-        assistant.data.cln = assistant.getContextArgument('reserve','cln').value;
-        assistant.data.cn = assistant.getContextArgument('reserve','cn').value;
-        assistant.data.ct = assistant.getContextArgument('reserve','ct').value;
 
-        let restaurant = assistant.data.restaurant;
+        let restaurant = response.session('restaurant');
         console.log(restaurant);
 
         get(restaurant,function(val) {
@@ -348,125 +391,76 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             horaires = val;
 
         if (!horaires) {
-            assistant.ask("I don't know this restaurant. ");
+            response.shouldEndSession(false).say("I don't know this restaurant. ");
             return;
         }
 
-        confirmation(assistant);
+        confirmation(response);
         });
 
-        if (isNaN(assistant.data.places)) {
-                assistant.data.problem = "I didn't understand the number of persons. "
+        if (isNaN(response.session('places'))) {
+                response.session('problem',"I didn't understand the number of persons. ");
             }
 
-        if (datebis == "today") {
-            assistant.data.date = todayNormalized;
-        } else if (isNaN(parseInt(datebis))) {
-            assistant.data.problem = "What was the date ? ";
-        } else {
-            assistant.data.date = datebis;
-        }
-        let date = assistant.data.date;
+        
         
         if (timebis && !isNaN(parseInt(timebis))) {
-            assistant.data.time = timebis.substring(0,5);
+            response.session('time',timebis.substring(0,5));
         } else {
-            assistant.data.problem = "At what time you wanted to reserve ? ";
+            response.session('problem',"At what time you wanted to reserve ? ");
         }
     }
 
-    function yes (assistant) {
-        let state = assistant.data.state;
+    app.intent('YesIntent', function yes (request, response) {
+        let state = response.session('state');
         if (state == WELCOME_STATE) {
-            assistant.data.state = RESERVE_STATE;
-            assistant.ask("What do you want to do ? ")
+            response.session('state',RESERVE_STATE);
+            response.shouldEndSession(false).say("What do you want to do ? ")
             return;
         } else
         if (state == YES_NO_STATE) {
-            assistant.data.proposition = false;
-            reserver(assistant);;
+            response.session('proposition' ,false);
+            reserver(response);;
         } else {
-            assistant.ask("I'm not sure of what you wanted. ");
+            response.shouldEndSession(false).say("I'm not sure of what you wanted. ");
         }
 
-    }
+    });
 
-    function no (assistant) {
-        let state = assistant.data.state;
+    app.intent('NoIntent',function no (request, response) {
+        let state = response.session('state');
         if (state == WELCOME_STATE) {
-            quit(assistant);
+            quit(response);
             return;
         } else
         if (state == YES_NO_STATE) {
-            assistant.data.state = RESERVE_STATE;
-            assistant.ask(R(assistant, CHANGE));
+            response.session('state',RESERVE_STATE);
+            response.shouldEndSession(false).say(R(CHANGE));
             return;
         } else {
-            assistant.ask("I'm not sure of what you wanted. ");
+            response.shouldEndSession(false).say("I'm not sure of what you wanted. ");
         }
 
-    }
+    });
 
-    function quit (assistant) {
-        assistant.tell(R(assistant, BYE));
-    }
+    app.intent('Quit',function quit (request, response) {
+        response.say(R(BYE));es
+    });
 
-    function selectionner (assistant) {
-        assistant.data.state = RESERVE_STATE;
-        let r = assistant.getContextArgument('actions_intent_option','OPTION').value;
-        assistant.setContext('next',5,{"ok":r});
-        assistant.ask("The restaurant "+r.toLowerCase()+" was selected. Please say next to continue. ");
-    }
+    app.intent('intention', function selectionner (request, response) {
+        response.session('state',RESERVE_STATE);
+        let r = response.getContextArgument('actions_intent_option','OPTION').value;
+        response.setContext('next',5,{"ok":r});
+        response.shouldEndSession(false).say("The restaurant "+r.toLowerCase()+" was selected. Please say next to continue. ");
+    });
 
-    function propose(assistant) {
+    app.intent('Propose', function propose(request, response) {
         let restaurants = ['VELICIOUS','AKABE','LA CLOCHE A FROMAGE'];
         let prompt = 'Here are some cool restaurants. ';
-        if (assistant.hasSurfaceCapability(assistant.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        assistant.askWithList(assistant.buildRichResponse()
-            .addSimpleResponse(prompt),
-            assistant.buildList()
-            .addItems(assistant.buildOptionItem(restaurants[0],['first one',descriptions[restaurants[0]][0]])
-                .setTitle(descriptions[restaurants[0]][0])
-                .setDescription(descriptions[restaurants[0]][1])
-                .setImage(IMAGE+descriptions[restaurants[0]][2],descriptions[restaurants[0]][0]))
-            .addItems(assistant.buildOptionItem(restaurants[1],['second one',descriptions[restaurants[1]][0]])
-                .setTitle(descriptions[restaurants[1]][0])
-                .setDescription(descriptions[restaurants[1]][1])
-                .setImage(IMAGE+descriptions[restaurants[1]][2],descriptions[restaurants[1]][0]))
-            .addItems(assistant.buildOptionItem(restaurants[2],['third one',descriptions[restaurants[2]][0]])
-                .setTitle(descriptions[restaurants[2]][0])
-                .setDescription(descriptions[restaurants[2]][1])
-                .setImage(IMAGE+descriptions[restaurants[2]][2],descriptions[restaurants[2]][0]))
-        )}
-        else {
-            assistant.ask(prompt+descriptions[restaurants[0]][0]+'. '+descriptions[restaurants[0]][1]+descriptions[restaurants[1]][0]+'. '+descriptions[restaurants[1]][1]+descriptions[restaurants[2]][0]+'. '+descriptions[restaurants[2]][1]+'.');
-        }
-    }
+        response.shouldEndSession(false).say(prompt+descriptions[restaurants[0]][0]+'. '+descriptions[restaurants[0]][1]+descriptions[restaurants[1]][0]+'. '+descriptions[restaurants[1]][1]+descriptions[restaurants[2]][0]+'. '+descriptions[restaurants[2]][1]+'.');
+        
+    });
 
-    // Mapping intentions
+app.intent('Answerpropose',reserve);
 
-    let actionMap = new Map();
-
-    actionMap.set('start', start);
-    actionMap.set('reserve', reserve);
-    actionMap.set('quit', quit);
-    actionMap.set('yes', yes);
-    actionMap.set('no', no);
-    actionMap.set('propose',propose);
-    actionMap.set('selectionner',selectionner);
-
-
-    assistant.handleRequest(actionMap);
-});
-
-// Server 
-
-if (module === require.main) {
-  // [START server]
-  // Start the server
-  let server = app.listen(process.env.PORT || 8080, function () {
-    let port = server.address().port;
-    console.log('app listening on port %s', port);
-  });
-  // [END server]
-}
+module.exports = app;
