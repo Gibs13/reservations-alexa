@@ -402,9 +402,9 @@ app.intent('Changename', function changedname(request, response) {
 
 app.intent('Reserve', function informations(request, response) {
     response.directives = [
-      {
-        "type": "Dialog.ElicitSlot",
+      { "type": "Dialog.ElicitSlot",
         "slotToElicit": "fromCity"}];
+        console.log(response.toString())
     return response.send()
 
     /*    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
