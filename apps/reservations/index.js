@@ -197,7 +197,13 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         let cln = response.session('cln');
         let cn = response.session('cn');
         let ct = response.session('ct');
-        return (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+(cd?"on "+response.session('date').substring(5)+" ":"")+(ct?"at "+response.session('time')+" ":"")+(cln?"with the name "+response.session('name')+" ":"")+". ";
+        let message = (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+(cd?"on "+response.session('date').substring(5)+" ":"")+(ct?"at "+response.session('time')+" ":"")+(cln?"with the name "+response.session('name')+" ":"")+". ";
+        response.session('cd',0);
+        response.session('cr',0);
+        response.session('cln',0);
+        response.session('cn',0);
+        response.session('ct',0);
+        return message;
     }
 
     function reserver (response) {
@@ -296,40 +302,52 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         return answer;
     }
 
-function testTime(timebis) {
-    let todayNormalized = today.getFullYear().toString()+'-'+('0' + (today.getMonth()+1).toString()).slice(-2)+'-'+('0' + (today.getDate()).toString()).slice(-2);
-    if (datebis == "today") {
-            response.session('date',todayNormalized);
-        } else if (isNaN(parseInt(datebis))) {
-            response.session('problem',"What was the date ? ");
-        } else {
-            response.session('date',datebis);
-        }
-        let date = response.session('date');
-        
-}
-
-function testDate(response, datebis) {
-        if (datebis == "today") {
-            response.session('date',todayNormalized);
-        } else if (isNaN(parseInt(datebis))) {
-            response.session('problem',"What was the date ? ");
-        } else {
-            response.session('date',datebis);
-        }
-        let date = response.session('date');
-}
-
-function testTime (response, timebis) {
-    if (timebis && !isNaN(parseInt(timebis))) {
-        response.session('time',timebis.substring(0,5));
-    } else {
-        response.session('problem',"At what time you wanted to reserve ? ");
+function testRestaurant(response, restaurantslot) {
+    if (!restaurantslot && !response.session('restaurant')) {
+        response.say("What time ?");
+        return;
+    } else if (restaurantslot) {
+        response.session('restaurant',restaurantslot);
     }
 }
 
-function testNumber (response, number) {
+function testDate(response, dateslot) {
+    if (!dateslot && !response.session('date')) {
+        response.say("What time ?");
+        return;
+    } else if (dateslot) {
+        response.session('date',dateslot);
+    }
+}
 
+function testTime (response, timeslot) {  
+    let time = request.slot('timeslot');
+    if (!timeslot && !response.session('time')) {
+        response.say("What time ?");
+        return;
+    } else if (timeslot) {
+        response.session('time',timeslot.toUpperCase());
+    }
+}
+
+function testNumber (response, numberslot) {
+    let time = request.slot('timeslot');
+    if (!numberslot && !response.session('number')) {
+        response.say("What time ?");
+        return;
+    } else if (numberslot) {
+        response.session('places',parseInt(numberslot));
+    }
+}
+
+function testName (response, nameslot) {
+    let time = request.slot('timeslot');
+    if (!nameslot && !response.session('name')) {
+        response.say("What time ?");
+        return;
+    } else if (nameslot) {
+        response.session('name',nameslot);
+    }
 }
 
     // intents
@@ -337,6 +355,7 @@ function testNumber (response, number) {
 app.pre = function(request, response, type) {
     today = new Date();
     console.log("today : " + today.getDate()+" "+(today.getMonth()+1)+" "+today.getHours()+" "+today.getMinutes());
+    return;
 };
 
 app.launch(function( request, response ) {
@@ -355,41 +374,41 @@ app.launch(function( request, response ) {
 } );
 
 app.intent('Changerestaurant', function changedresto(request, response) {
-    response.session('restaurant',request.slot('restaurantslot').toUpperCase());
-    response.session('cr',request.slot('cr'));
+    testRestaurant(response,request.slot('restaurantslot'));
+    response.session('cr',1);
 });
 
 app.intent('Changedate', function changeddate(request, response) {
     testDate(response,request.slot('dateslot'));
-    response.session('cd',request.slot('cd'));
+    response.session('cd',1);
 });
 
 app.intent('Changetime', function changedtime(request, response) {
     testTime(response,request.slot('timeslot'));
-    response.session('ct',request.slot('ct'));
+    response.session('ct',1);
 });
 
 app.intent('Changenumber', function changednumber(request, response) {
-    response.session('places',parseInt(request.slot('numberslot')));
-    response.session('cn',request.slot('cn'));
+    testNumber(response,request.slot('numberslot'));
+    response.session('cn',1);
 });
 
 app.intent('Changename', function changedname(request, response) {
-    response.session('name',request.slot('nameslot'));
-    response.session('cln',request.slot('cln'));
+    testName(response,request.slot('nameslot'));
+    response.session('cln',1);
 });
 
-app.intent( 'Reserve', function informations(request, response) {
-        response.session('restaurant',request.slot('restaurantslot').toUpperCase());
+app.intent('Reserve', function informations(request, response) {
+        testRestaurant(response,request.slot('restaurantslot'));
         testDate(response,request.slot('dateslot'));
         testTime(response,request.slot('timeslot'));
-        response.session('name',request.slot('nameslot'));
-        response.session('places',parseInt(request.slot('numberslot')));
-        response.session('cd',request.slot('cd'));
-        response.session('cr',request.slot('cr'));
-        response.session('cln',request.slot('cln'));
-        response.session('cn',request.slot('cn'));
-        response.session('ct',request.slot('ct'));
+        testNumber(response,request.slot('numberslot'));
+        testName(response,request.slot('nameslot'));
+        response.session('cd',1);
+        response.session('cr',1);
+        response.session('cln',1);
+        response.session('cn',1);
+        response.session('ct',1);
 });
 
 function reserve (request, response) {
