@@ -309,7 +309,7 @@ function testRestaurant(response, restaurantslot) {
         return 1;
     } else if (restaurantslot) {
         let res = restaurantslot.toUpperCase()
-        for (let i=0;i<RESTAURANTS.lenght();i++) {
+        for (let i=0;i<RESTAURANTS.length;i++) {
             if (res == RESTAURANTS[i]) {
                 response.session('restaurant',res);
                 response.session('cr',1);
