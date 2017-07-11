@@ -175,8 +175,9 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             response.session('time ',T);
             return T;
         } });
-        let m = response.session('message');
-        }  
+        
+        } 
+    let m = response.session('message');
         if (T === null) {
             console.log("Pas de place la semaine")
             response.shouldEndSession(false).say(R(NOROOM) + "this day and the week after. You may try another date. ");
