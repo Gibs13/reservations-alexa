@@ -232,7 +232,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         console.log(restaurant + " " + date + " " + creneau);
     }
 
-    function disponible(response, date, time) {
+    function disponible(response, date, time, callback) {
         let p = response.session('places');
         let heure;
         let possibleTime = [];
@@ -241,8 +241,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         if (isNaN(time)) {
             console.log("Nan");
         }
-        if (horairesJour == undefined) {return false;}
-        if (horairesJour.length <= 1) {return false;}
+        if (horairesJour == undefined) {callback (false);}
+        if (horairesJour.length <= 1) {callback (false);}
         for (let i = 0; i<horairesJour.length;i++) {
             if (!isNaN(horairesJour[i])) {
                 continue;
@@ -269,7 +269,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                     } 
                     rightTime = heure;
                     console.log("rightTime : " + rightTime);
-                    return ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
+                    callback( ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2));
                 } else {
                     if (!response.session('proposition')) {
                         let message = response.session('message');
@@ -291,7 +291,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         }
         let rightTime;
         if (possibleTime == []) {
-            return false;
+            callback (false);
         } else if (!possibleTime[0]) {
             rightTime = possibleTime[1];
         } else if (!possibleTime[1]) {
@@ -303,7 +303,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         response.session('ct',1);
         let answer = ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
         console.log("temps proposé : " + answer);
-        return answer;
+        callback (answer);
     }
 
 function testRestaurant(response, restaurantslot) {
