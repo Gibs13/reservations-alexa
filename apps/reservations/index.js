@@ -415,7 +415,7 @@ function reserve (response) {
     let restaurant = response.session('restaurant');
     console.log(restaurant);
 
-    return get(restaurant,function(val) {
+    return Promise.resolve(get(restaurant,function(val) {
 
         horaires = val;
 
@@ -427,7 +427,7 @@ function reserve (response) {
     }
 
     return Promise.resolve(confirmation(response));
-    });        
+    }));        
         
 }
 
