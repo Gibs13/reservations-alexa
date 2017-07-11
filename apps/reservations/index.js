@@ -307,7 +307,7 @@ function testRestaurant(response, restaurantslot) {
     if (!restaurantslot && !response.session('restaurant')) {
         response.say("What restaurant ?");
         return 1;
-    } else if (restaurantslot) {
+    } else if (!!restaurantslot) {
         let res = restaurantslot.toUpperCase();
         for (let i=0;i<RESTAURANTS.length;i++) {
             if (res == RESTAURANTS[i]) {
@@ -328,7 +328,7 @@ function testDate(response, dateslot) {
     if (!dateslot && !response.session('date')) {
         response.say("What date ?");
         return 1;
-    } else if (dateslot) {
+    } else if (!!dateslot) {
         response.session('date',dateslot);
         response.session('cd',1);
     }
@@ -339,7 +339,7 @@ function testTime(response, timeslot) {
     if (!timeslot && !response.session('time')) {
         response.say("What time ?");
         return 1;
-    } else if (timeslot) {
+    } else if (!!timeslot) {
         response.session('time',timeslot);
         response.session('ct',1);
     }
@@ -350,7 +350,7 @@ function testNumber(response, numberslot) {
     if (!numberslot && !response.session('places')) {
         response.say("What number ?");
         return 1;
-    } else if (numberslot) {
+    } else if (!!numberslot) {
         response.session('places',parseInt(numberslot));
         response.session('cn',1);
     }
@@ -361,7 +361,7 @@ function testName(response, nameslot) {
     if (!nameslot && !response.session('name')) {
         response.say("What name ?");
         return 1;
-    } else if (nameslot) {
+    } else if (!!nameslot) {
         response.session('name',nameslot);
         response.session('cln',1);
     }
@@ -377,7 +377,7 @@ app.pre = function(request, response, type) {
 };
 
 app.launch(function( request, response ) {
-
+    console.log("launched");
     response.session('proposition',false);
     response.session('message',"");
     response.session('problem',false);
