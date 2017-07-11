@@ -188,10 +188,12 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         
         response.session('state',YES_NO_STATE);
         if (!!response.session('proposition')) {
-            response.say(m + R(PROPOSITION) + message + R(AGREE)).shouldEndSession(false);
+            console.log("proposition");
+            response.say(m + R(PROPOSITION) + /*message +*/ R(AGREE)).shouldEndSession(false);
             return;
         } else {
-            response.say(m + R(READY) + message + R(FINISH)).shouldEndSession(false);
+            console.log("validation");
+            response.say(m + R(READY) + /*message +*/ R(FINISH)).shouldEndSession(false);
             return;
         }        
     }
