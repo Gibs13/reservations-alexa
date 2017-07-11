@@ -391,36 +391,6 @@ app.launch(function( request, response ) {
     response.shouldEndSession(false).say(R(WELCOME));
 } );
 
-app.intent('Changerestaurant', function changedresto(request, response) {
-    response.session('state',RESERVE_STATE);
-    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
-    reserve(response);
-});
-
-app.intent('Changedate', function changeddate(request, response) {
-    response.session('state',RESERVE_STATE);
-    if(testDate(response,request.slot('dateslot'))) {return;}
-    reserve(response);
-});
-
-app.intent('Changetime', function changedtime(request, response) {
-    response.session('state',RESERVE_STATE);
-    if(testTime(response,request.slot('timeslot'))) {return;}
-    reserve(response);
-});
-
-app.intent('Changenumber', function changednumber(request, response) {
-    response.session('state',RESERVE_STATE);
-    if(testNumber(response,request.slot('numberslot'))) {return;}
-    reserve(response);
-});
-
-app.intent('Changename', function changedname(request, response) {
-    response.session('state',RESERVE_STATE);
-    if(testName(response,request.slot('nameslot'))) {return;}
-    reserve(response);
-});
-
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
 
@@ -433,7 +403,6 @@ function informations(request, response) {
 }
 
 function reserve (response) {
-
 
     response.session('proposition',false);
     response.session('message',"");
@@ -459,6 +428,16 @@ function reserve (response) {
     });        
         
 }
+
+app.intent('Change', function (request, response) {
+    if (state == RESERVE_STATE) {
+        response.say("What's the new value ? ").shouldEndSession(false);
+        return;
+    } else {
+        response.say("You cannot change right now. ").shouldEndSession(false);
+        return;
+    }
+})
 
     app.intent('YesIntent', function yes (request, response) {
         let state = response.session('state');
