@@ -308,7 +308,7 @@ function testRestaurant(response, restaurantslot) {
         response.say("What restaurant ?");
         return 1;
     } else if (restaurantslot) {
-        let res = restaurantslot.toUpperCase()
+        let res = restaurantslot.toUpperCase();
         for (let i=0;i<RESTAURANTS.length;i++) {
             if (res == RESTAURANTS[i]) {
                 response.session('restaurant',res);
@@ -377,6 +377,7 @@ app.pre = function(request, response, type) {
 };
 
 app.launch(function( request, response ) {
+
     response.session('proposition',false);
     response.session('message',"");
     response.session('problem',false);
