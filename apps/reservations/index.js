@@ -175,7 +175,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             response.session('time ',T);
             return T;
         } });
-
+        let m = response.session('message');
         }  
         if (T === null) {
             console.log("Pas de place la semaine")
@@ -186,11 +186,11 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         let message = createMessage(response);
         
         response.session('state',YES_NO_STATE);
-        if (response.session('proposition')) {
-            response.say(response.session('message') + R(PROPOSITION) /*+ message */+ R(AGREE)).shouldEndSession(false);
+        if (!!response.session('proposition')) {
+            response.say(m + R(PROPOSITION) + message + R(AGREE)).shouldEndSession(false);
             return;
         } else {
-            response.say(response.session('message') + R(READY) /*+ message */+ R(FINISH)).shouldEndSession(false);
+            response.say(m + R(READY) + message + R(FINISH)).shouldEndSession(false);
             return;
         }        
     }
