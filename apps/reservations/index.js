@@ -169,7 +169,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                 day = 1;
             }
             date = date.substring(0,4)+'-'+('0'+month.toString()).slice(-2)+'-'+('0'+day.toString()).slice(-2);
-
+            return false;
         } else {
             response.session('time ',T);
             return T;
