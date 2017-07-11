@@ -181,7 +181,6 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         if (T === null) {
             console.log("Pas de place la semaine")
             response.shouldEndSession(false).say(R(NOROOM) + "this day and the week after. You may try another date. ");
-            return;
         }
 
         let message = createMessage(response);
@@ -190,11 +189,11 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         if (!!response.session('proposition')) {
             console.log("proposition");
             response.say(m + R(PROPOSITION) + /*message +*/ R(AGREE)).shouldEndSession(false);
-            return;
+            return response;
         } else {
             console.log("validation");
             response.say(/*m +*/ R(READY) + /*message +*/ R(FINISH)).shouldEndSession(false);
-            return;
+            return response;
         }        
     }
 
@@ -406,7 +405,7 @@ function informations(request, response) {
     if(testTime(response,request.slot('timeslot'))) {return;}
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
-    reserve(response);
+    return reserve(response);
 }
 
 function reserve (response) {
@@ -431,7 +430,7 @@ function reserve (response) {
         response.session('problem',"I didn't understand the number of persons. ");
     }
 
-    confirmation(response);
+    return confirmation(response);
     });        
         
 }
