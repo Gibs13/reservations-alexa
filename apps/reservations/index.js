@@ -405,7 +405,8 @@ function informations(request, response) {
     if(testTime(response,request.slot('timeslot'))) {return;}
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
-    return reserve(response);
+    reserve(response);
+    console.log("end");
 }
 
 function reserve (response) {
