@@ -155,7 +155,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         while (T === false) {
 
 
-        T = disponible(response, date,minutes);
+        disponible(response, date, minutes).then((value) => T = value);
         if (T === false) {
             //Pas de place ce jour
             console.log("Pas de place ce jour");
@@ -171,7 +171,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             date = date.substring(0,4)+'-'+('0'+month.toString()).slice(-2)+'-'+('0'+day.toString()).slice(-2);
 
         } else {
-            response.session('time',T);
+            response.session('time ',T);
         }
 
         }  
@@ -231,6 +231,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     }
 
     function disponible(response, date, time) {
+        let p = response.session('places');
         let heure;
         let possibleTime = [];
         let placeRestante;
@@ -254,7 +255,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             // Si non, est ce que le créneau avant ou celui après est disponible 
 
             if (heure<=time && time<heure+30) {
-                if (placeRestante >= response.session('places')) {
+                if (placeRestante >= p) {
                     response.session('creneau',i);
                     let rightTime;
                     if (time != heure) {
@@ -276,7 +277,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                         response.session(ct,1);
                     }
                 }
-            } else if (placeRestante >= response.session('places')) {
+            } else if (placeRestante >= p) {
                 if (time>heure && today.getDate() != parseInt(date.substring(8,10) )) {
                     possibleTime[0] = heure;
                     possibleTime[2] = i;
