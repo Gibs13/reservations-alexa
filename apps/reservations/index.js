@@ -154,7 +154,11 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
         while (T === false) {
 
-        disponible(response, date, minutes).then((value) => T = value);
+        disponible(response, date, minutes).then((value) => {
+        T = value;
+        return;}
+        );
+        console.log(T);
         if (T === false) {
             //Pas de place ce jour
             console.log("Pas de place ce jour");
