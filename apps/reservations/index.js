@@ -303,7 +303,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     }
 
 function testRestaurant(response, restaurantslot) {
-    if (!restaurantslot && response.session('restaurant') == undefined) {
+    if (!restaurantslot && !response.session('restaurant')) {
         response.say("What restaurant ?");
         return 1;
     } else if (restaurantslot) {
@@ -324,7 +324,7 @@ function testRestaurant(response, restaurantslot) {
 }
 
 function testDate(response, dateslot) {
-    if (!dateslot && response.session('date') == undefined) {
+    if (!dateslot && !response.session('date')) {
         response.say("What date ?");
         return 1;
     } else if (dateslot) {
@@ -335,7 +335,7 @@ function testDate(response, dateslot) {
 }
 
 function testTime(response, timeslot) {  
-    if (!timeslot && response.session('time') == undefined) {
+    if (!timeslot && !response.session('time')) {
         response.say("What time ?");
         return 1;
     } else if (timeslot) {
@@ -346,7 +346,7 @@ function testTime(response, timeslot) {
 }
 
 function testNumber(response, numberslot) {
-    if (!numberslot && response.session('places') == undefined) {
+    if (!numberslot && !response.session('places')) {
         response.say("What number ?");
         return 1;
     } else if (numberslot) {
@@ -357,7 +357,7 @@ function testNumber(response, numberslot) {
 }
 
 function testName(response, nameslot) {
-    if (!nameslot && response.session('name') == undefined) {
+    if (!nameslot && !response.session('name')) {
         response.say("What name ?");
         return 1;
     } else if (nameslot) {
