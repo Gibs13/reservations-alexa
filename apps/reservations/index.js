@@ -154,7 +154,6 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
         while (T === false) {
 
-
         disponible(response, date, minutes).then((value) => T = value);
         if (T === false) {
             //Pas de place ce jour
@@ -231,6 +230,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     }
 
     function disponible(response, date, time) {
+        return new Promise((resolve,reject)=>{resolve()
         let p = response.session('places');
         let heure;
         let possibleTime = [];
@@ -239,8 +239,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         if (isNaN(time)) {
             console.log("Nan");
         }
-        if (horairesJour == undefined) {return false;}
-        if (horairesJour.length <= 1) {return false;}
+        if (horairesJour == undefined) {resolve(false);}
+        if (horairesJour.length <= 1) {resolve(false);}
         for (let i = 0; i<horairesJour.length;i++) {
             if (!isNaN(horairesJour[i])) {
                 continue;
@@ -267,7 +267,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                     } 
                     rightTime = heure;
                     console.log("rightTime : " + rightTime);
-                    return ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
+                    resolve(('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2));
                 } else {
                     if (!response.session('proposition')) {
                         let message = response.session('message');
@@ -289,7 +289,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         }
         let rightTime;
         if (possibleTime == []) {
-            return false;
+            resolve(false);
         } else if (!possibleTime[0]) {
             rightTime = possibleTime[1];
         } else if (!possibleTime[1]) {
@@ -301,8 +301,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         response.session('ct',1);
         let answer = ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
         console.log("temps proposé : " + answer);
-        return answer;
-    }
+        resolve(answer);
+    });}
 
 function testRestaurant(response, restaurantslot) {
     if (!restaurantslot && !response.session('restaurant')) {
