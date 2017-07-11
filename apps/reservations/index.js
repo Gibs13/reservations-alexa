@@ -402,8 +402,7 @@ function informations(request, response) {
     if(testTime(response,request.slot('timeslot'))) {return;}
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
-    response.say(reserve(response)).shouldEndSession(false);
-    console.log('end');
+    return Promise.resolve(reserve(response));
 }
 
 function reserve (response) {
@@ -427,7 +426,7 @@ function reserve (response) {
         response.session('problem',"I didn't understand the number of persons. ");
     }
 
-    return confirmation(response);
+    return Promise.resolve(confirmation(response));
     });        
         
 }
