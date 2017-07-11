@@ -155,12 +155,12 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         while (T === false) {
 
 
-        T = disponible(response, date, minutes);
+        T = disponible(response, date, minutes, function(T) {
         if (T === false) {
             //Pas de place ce jour
             console.log("Pas de place ce jour");
             if (tries == 7) {
-                break;
+                return null;
             }
             tries++;
             day++;
@@ -172,10 +172,12 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
         } else {
             response.session('time ',T);
-        }
+            return T;
+        } });
 
         }  
-        if (T === false) {
+        if (T === null) {
+            console.log("Pas de place la semaine")
             response.shouldEndSession(false).say(R(NOROOM) + "this day and the week after. You may try another date. ");
             return;
         }
