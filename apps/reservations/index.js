@@ -403,6 +403,7 @@ function informations(request, response) {
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
     response.say(reserve(response)).shouldEndSession(false);
+    console.log('end');
 }
 
 function reserve (response) {
@@ -415,7 +416,7 @@ function reserve (response) {
     let restaurant = response.session('restaurant');
     console.log(restaurant);
 
-    get(restaurant,function(val) {
+    return get(restaurant,function(val) {
 
         horaires = val;
 
