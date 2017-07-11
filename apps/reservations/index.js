@@ -308,10 +308,9 @@ function testRestaurant(response, restaurantslot) {
         response.say("What restaurant ?");
         return 1;
     } else if (!!restaurantslot) {
-        let res = restaurantslot.toUpperCase();
         for (let i=0;i<RESTAURANTS.length;i++) {
-            if (res == RESTAURANTS[i]) {
-                response.session('restaurant',res);
+            if (restaurantslot == RESTAURANTS[i]) {
+                response.session('restaurant',restaurantslot.toUpperCase());
                 response.session('cr',1);
                 return 0;
             }
