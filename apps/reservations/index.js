@@ -28,6 +28,7 @@ const CONFIRM_STATE = 'confirm';
 const YES_NO_STATE = 'yes_no';
 const GIVE_NAME_STATE = 'give_name';
 const CHANGE_STATE= "change";
+const RESTAURANTS = ["velicious","akabe","la cloche a fromage","habibi","aristide","kim","le monastir","la patrie","pasta et ravioli","en afghanistan","au diable bleu","lard et crème","meteoreat","le pied de mammouth","cinecitta","la vetta","le moulin du diable","l'absinthe","pur etc","la cocotte","milas","la grappa","block out","gavroche","aux quatre vents"]
 
 const PROPOSITION = ["My suggestion is ","I may suggest you ","A possible choice would be ","I allowed myself to choose ","Maybe "];
 const MISUNDERSTAND = ["Sorry, I didn't understand. ","What did you just said ? ","I didn't heared well. "];
