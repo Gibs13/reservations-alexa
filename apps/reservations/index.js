@@ -95,7 +95,7 @@ function get(resto, callback) {
         }
         console.log('horaires pretes');
         callback(horaires);
-    })
+    });
 }
 
 function modify(resto, date, creneau, places, valeur, nom, time){
