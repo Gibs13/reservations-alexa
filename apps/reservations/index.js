@@ -241,8 +241,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         if (isNaN(time)) {
             console.log("Nan");
         }
-        if (horairesJour == undefined) {callback (false);}
-        if (horairesJour.length <= 1) {callback (false);}
+        if (horairesJour == undefined) {return callback (false);}
+        if (horairesJour.length <= 1) {return callback (false);}
         for (let i = 0; i<horairesJour.length;i++) {
             if (!isNaN(horairesJour[i])) {
                 continue;
@@ -269,7 +269,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                     } 
                     rightTime = heure;
                     console.log("rightTime : " + rightTime);
-                    callback( ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2));
+                    return callback( ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2));
                 } else {
                     if (!response.session('proposition')) {
                         let message = response.session('message');
@@ -291,7 +291,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         }
         let rightTime;
         if (possibleTime == []) {
-            callback (false);
+            return callback (false);
         } else if (!possibleTime[0]) {
             rightTime = possibleTime[1];
         } else if (!possibleTime[1]) {
@@ -303,7 +303,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         response.session('ct',1);
         let answer = ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
         console.log("temps proposé : " + answer);
-        callback (answer);
+        return callback (answer);
     }
 
 function testRestaurant(response, restaurantslot) {
