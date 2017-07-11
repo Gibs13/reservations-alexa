@@ -75,7 +75,7 @@ const IMAGE = 'https://reservation01.herokuapp.com/images/'
         });*/
 
 function get(resto, callback) {
-    sheets.spreadsheets.values.get({
+    return sheets.spreadsheets.values.get({
         auth: oauth2Client,
         spreadsheetId: '1DnlKFhV0vNPJ-vQrixpocbcXRlHL5xKJxx5h7IF_qEc',
         range: "'" + resto + "'"
@@ -396,16 +396,15 @@ app.launch(function( request, response ) {
 
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
-
     if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
     if(testDate(response,request.slot('dateslot'))) {return;}
     if(testTime(response,request.slot('timeslot'))) {return;}
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
-    return Promise.resolve(reserve(response));
+    return reserve(response);
 }
 
-function reserve (response) {
+function reserve(response) {
 
     response.session('proposition',false);
     response.session('message',"");
@@ -414,8 +413,8 @@ function reserve (response) {
 
     let restaurant = response.session('restaurant');
     console.log(restaurant);
-
-    return Promise.resolve(get(restaurant,function(val) {
+    let wait = 0; 
+    return get(restaurant,function(val) {
 
         horaires = val;
 
@@ -426,9 +425,8 @@ function reserve (response) {
         response.session('problem',"I didn't understand the number of persons. ");
     }
 
-    return Promise.resolve(confirmation(response));
-    }));        
-        
+    confirmation(response);
+    });
 }
 
 app.intent('Change', function (request, response) {
