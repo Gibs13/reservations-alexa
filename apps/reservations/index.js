@@ -171,6 +171,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             date = date.substring(0,4)+'-'+('0'+month.toString()).slice(-2)+'-'+('0'+day.toString()).slice(-2);
             return false;
         } else {
+            console.log("Time set")
             response.session('time ',T);
             return T;
         } });
@@ -186,10 +187,10 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         
         response.session('state',YES_NO_STATE);
         if (response.session('proposition')) {
-            response.say(response.session('message') + R(PROPOSITION) + message + R(AGREE)).shouldEndSession(false);
+            response.say(response.session('message') + R(PROPOSITION) /*+ message */+ R(AGREE)).shouldEndSession(false);
             return;
         } else {
-            response.say(response.session('message') + R(READY) + message + R(FINISH)).shouldEndSession(false);
+            response.say(response.session('message') + R(READY) /*+ message */+ R(FINISH)).shouldEndSession(false);
             return;
         }        
     }
