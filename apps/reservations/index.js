@@ -229,11 +229,13 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                 //response.setContext('reserve', 0);
                 console.log("valide");
                 let valeur = horaires[date][creneau].substring(0,6) + (placeRestante-places).toString();
-                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'));
                 response.say(R(SUCCESS) + name);
+                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'));
+                return;
             } else {
                 console.log("invalide");
                 response.shouldEndSession(false).say("There was an error, the places are not available anymore. ");
+                return;
             }
         });
     }
