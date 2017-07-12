@@ -190,11 +190,11 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         response.session('state',YES_NO_STATE);
         if (!!response.session('proposition')) {
             console.log("proposition");
-            response.say(m + R(PROPOSITION) + /*message +*/ R(AGREE)).shouldEndSession(false);
+            response.say(m + R(PROPOSITION) + message + R(AGREE)).shouldEndSession(false);
             return;
         } else {
             console.log("validation");
-            response.say(/*m +*/ R(READY) + /*message +*/ R(FINISH)).shouldEndSession(false);
+            response.say(m + R(READY) + message + R(FINISH)).shouldEndSession(false);
             return;
         }        
     }
@@ -216,7 +216,11 @@ function modify(resto, date, creneau, places, valeur, nom, time){
 
     function reserver (response) {
         let restaurant = response.session('restaurant');
-        get(restaurant, function(horaires) {
+        let date = response.session('date');
+        let creneau = response.session('creneau');
+        console.log(restaurant + " " + date + " " + creneau);
+        return Promise.resolve(get(restaurant))
+        .then(function(horaires) {
             let placeRestante = parseInt(horaires[date][creneau].substring(6));
             let places = response.session('places');
             let name = response.session('name');
@@ -232,9 +236,6 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                 response.shouldEndSession(false).say("There was an error, the places are not available anymore. ");
             }
         });
-        let date = response.session('date');
-        let creneau = response.session('creneau');
-        console.log(restaurant + " " + date + " " + creneau);
     }
 
     function disponible(response, date, time, callback) {
@@ -457,7 +458,7 @@ app.intent('Change', function (request, response) {
         } else
         if (state == YES_NO_STATE) {
             response.session('proposition' ,false);
-            reserver(response);;
+            return Promise.resolve(reserver(response));
         } else {
             response.shouldEndSession(false).say("I'm not sure of what you wanted. ");
         }
