@@ -435,13 +435,13 @@ function testName(response, nameslot) {
 
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
-    let bool;
-    bool = testName(response,request.slot('nameslot'));
-    bool = testNumber(response,request.slot('numberslot'));
-    bool = testTime(response,request.slot('timeslot'));
-    bool = testDate(response,request.slot('dateslot'));
-    bool = testRestaurant(response,request.slot('restaurantslot'));
-    if(bool) {return;}
+    let notBool = 0;
+    notBool += testName(response,request.slot('nameslot'));
+    notBool += testNumber(response,request.slot('numberslot'));
+    notBool += testTime(response,request.slot('timeslot'));
+    notBool += testDate(response,request.slot('dateslot'));
+    notBool += testRestaurant(response,request.slot('restaurantslot'));
+    if(notBool) {return;}
     return Promise.resolve(reserve(response));
 }
 
