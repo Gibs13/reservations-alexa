@@ -366,6 +366,7 @@ function disponible(response, date, time, callback) {
 
 function testRestaurant(response, restaurantslot) {
     if (!restaurantslot && !response.session('restaurant')) {
+        response.clear();
         response.say(R(ASK_RESTO));
         return 1;
     } else if (!!restaurantslot) {
@@ -386,6 +387,7 @@ function testRestaurant(response, restaurantslot) {
 
 function testDate(response, dateslot) {
     if (!dateslot && !response.session('date')) {
+        response.clear();
         response.say(R(ASK_DATE));
         return 1;
     } else if (!!dateslot) {
@@ -397,6 +399,7 @@ function testDate(response, dateslot) {
 
 function testTime(response, timeslot) {  
     if (!timeslot && !response.session('time')) {
+        response.clear();
         response.say(R(ASK_TIME));
         return 1;
     } else if (!!timeslot) {
@@ -408,6 +411,7 @@ function testTime(response, timeslot) {
 
 function testNumber(response, numberslot) {
     if (!numberslot && !response.session('places')) {
+        response.clear();
         response.say(R(ASK_NUMBER));
         return 1;
     } else if (!!numberslot) {
@@ -419,6 +423,7 @@ function testNumber(response, numberslot) {
 
 function testName(response, nameslot) {
     if (!nameslot && !response.session('name')) {
+        response.clear();
         response.say(R(ASK_NAME));
         return 1;
     } else if (!!nameslot) {
@@ -430,12 +435,13 @@ function testName(response, nameslot) {
 
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
-
-    if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
-    if(testDate(response,request.slot('dateslot'))) {return;}
-    if(testTime(response,request.slot('timeslot'))) {return;}
-    if(testNumber(response,request.slot('numberslot'))) {return;}
-    if(testName(response,request.slot('nameslot'))) {return;}
+    let bool;
+    bool = testName(response,request.slot('nameslot'));
+    bool = testNumber(response,request.slot('numberslot'));
+    bool = testTime(response,request.slot('timeslot'));
+    bool = testDate(response,request.slot('dateslot'));
+    bool = testRestaurant(response,request.slot('restaurantslot'));
+    if(bool) {return;}
     return Promise.resolve(reserve(response));
 }
 
