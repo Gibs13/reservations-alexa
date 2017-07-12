@@ -275,6 +275,7 @@ function confirmation (response) {
         return false;
     } else {
         console.log("Time set")
+        response.session('date',date);
         response.session('time',T);
         return T;
     } });
