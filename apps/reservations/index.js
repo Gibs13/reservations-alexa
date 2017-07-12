@@ -226,7 +226,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
             let name = response.session('name');
             console.log("reservation à " + horaires[date][creneau]);
             if (placeRestante-places>=0) {
-                response.setContext('reserve', 0);
+                //response.setContext('reserve', 0);
                 console.log("valide");
                 let valeur = horaires[date][creneau].substring(0,6) + (placeRestante-places).toString();
                 modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'));
@@ -487,8 +487,8 @@ app.intent('Change', function (request, response) {
 
     app.intent('intention', function selectionner (request, response) {
         response.session('state',RESERVE_STATE);
-        let r = response.getContextArgument('actions_intent_option','OPTION').value;
-        response.setContext('next',5,{"ok":r});
+        // let r = response.getContextArgument('actions_intent_option','OPTION').value;
+        // response.setContext('next',5,{"ok":r});
         response.shouldEndSession(false).say("The restaurant "+r.toLowerCase()+" was selected. Please say next to continue. ");
     });
 
