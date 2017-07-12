@@ -256,6 +256,12 @@ function confirmation (response) {
     if (T === false) {
         //Pas de place ce jour
         console.log("Pas de place ce jour");
+        if (tries == 0 && !response.session('proposition')) {
+            response.session('proposition',true);
+            let message = response.session('message');
+            message+= R(NOROOM) + "this day. ";
+            response.session('message',message);
+        }
         if (tries == 7) {
             return null;
         }
@@ -426,6 +432,7 @@ function disponible(response, date, time, callback) {
     }
     response.session('creneau',rightTime == possibleTime[0] ? possibleTime[2] : possibleTime[3]);
     response.session('ct',1);
+    response.session('proposition',true);
     let answer = ('0' + Math.floor(rightTime/60).toString()).slice(-2) + ':' + ('0' + (rightTime-Math.floor(rightTime/60)*60).toString()).slice(-2);
     console.log("temps proposé : " + answer);
     return callback (answer);
