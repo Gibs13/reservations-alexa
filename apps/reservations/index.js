@@ -74,8 +74,9 @@ const IMAGE = 'https://reservation01.herokuapp.com/images/'
         callback();
         });*/
 
-function get(resto, callback) {
-    return sheets.spreadsheets.values.get({
+function get(resto) {
+    return new Promise(resolve => {
+    sheets.spreadsheets.values.get({
         auth: oauth2Client,
         spreadsheetId: '1DnlKFhV0vNPJ-vQrixpocbcXRlHL5xKJxx5h7IF_qEc',
         range: "'" + resto + "'"
@@ -94,8 +95,8 @@ function get(resto, callback) {
             horaires[row.shift()] = row;
         }
         console.log('horaires pretes');
-        callback(horaires);
-    });
+        resolve(horaires);
+    })});
 }
 
 function modify(resto, date, creneau, places, valeur, nom, time){
@@ -140,7 +141,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     function confirmation (response) {
 
         if (response.session('problem') != false) {
-            return response.session('problem');
+            response.shouldEndSession(false).say(response.session('problem'));
+            return;
         }
         let time = response.session('time');
         let minutes = parseInt(time.substring(0,2))*60 + parseInt(time.substring(3,5));
@@ -179,7 +181,8 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         let m = response.session('message');
         if (T === null) {
             console.log("Pas de place la semaine")
-            return (R(NOROOM) + "this day and the week after. You may try another date. ");
+            response.shouldEndSession(false).say(R(NOROOM) + "this day and the week after. You may try another date. ");
+            return;
         }
 
         let message = createMessage(response);
@@ -187,10 +190,12 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         response.session('state',YES_NO_STATE);
         if (!!response.session('proposition')) {
             console.log("proposition");
-            return (m + R(PROPOSITION) + message + R(AGREE));
+            response.say(m + R(PROPOSITION) + /*message +*/ R(AGREE)).shouldEndSession(false);
+            return;
         } else {
             console.log("validation");
-            return (m + R(READY) + message + R(FINISH));
+            response.say(/*m +*/ R(READY) + /*message +*/ R(FINISH)).shouldEndSession(false);
+            return;
         }        
     }
 
@@ -396,15 +401,16 @@ app.launch(function( request, response ) {
 
 function informations(request, response) {
     response.session('state',RESERVE_STATE);
+
     if(testRestaurant(response,request.slot('restaurantslot'))) {return;}
     if(testDate(response,request.slot('dateslot'))) {return;}
     if(testTime(response,request.slot('timeslot'))) {return;}
     if(testNumber(response,request.slot('numberslot'))) {return;}
     if(testName(response,request.slot('nameslot'))) {return;}
-    return reserve(response);
+    return Promise.resolve(reserve(response));
 }
 
-function reserve(response) {
+function reserve (response) {
 
     response.session('proposition',false);
     response.session('message',"");
@@ -413,20 +419,23 @@ function reserve(response) {
 
     let restaurant = response.session('restaurant');
     console.log(restaurant);
-    let wait = 0; 
-    return get(restaurant,function(val) {
+
+    return Promise.resolve(get(restaurant)).then(
+    function(val) {
 
         horaires = val;
 
     if (!horaires) {
-        return "I don't know this restaurant. ";
+        response.shouldEndSession(false).say("I don't know this restaurant. ");
+        return;
     }
         if (isNaN(response.session('places'))) {
         response.session('problem',"I didn't understand the number of persons. ");
     }
 
     confirmation(response);
-    });
+    });        
+        
 }
 
 app.intent('Change', function (request, response) {
@@ -472,7 +481,7 @@ app.intent('Change', function (request, response) {
     });
 
     app.intent('Quit',function quit (request, response) {
-        response.say(R(BYE));
+        response.say(R(BYE));es
     });
 
     app.intent('intention', function selectionner (request, response) {
