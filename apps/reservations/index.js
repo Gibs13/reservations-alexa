@@ -124,7 +124,7 @@ function modify(resto, date, creneau, places, valeur, nom, time, date2){
     insertDataOption: "INSERT_ROWS",
     resource: {
         values: [
-            [resto + " " + date2 + " " + time + " " + places + " " + nom]]
+            [resto + " " + date2 + " " + time + " " + places + " " + nom + " (via alexa)"]]
         }
     }, function(err, response){
         if (err) {
