@@ -444,7 +444,9 @@ function informations(request, response) {
     notBool += testTime(response,request.slot('timeslot'));
     notBool += testDate(response,request.slot('dateslot'));
     notBool += testRestaurant(response,request.slot('restaurantslot'));
-    if(notBool) {return;}
+    if(notBool) {
+        response.shouldEndSession(false);
+        return;}
     return Promise.resolve(reserve(response));
 }
 
