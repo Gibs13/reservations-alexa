@@ -283,7 +283,7 @@ function modify(resto, date, creneau, places, valeur, nom, time, date2){
                         message += "There's only "+placeRestante+" seats at this hour. ";
                         response.session('message',message);
                         response.session('proposition',true);
-                        response.session(ct,1);
+                        response.session('ct',1);
                     }
                 }
             } else if (placeRestante >= p) {
