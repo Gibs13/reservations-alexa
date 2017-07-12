@@ -311,7 +311,7 @@ function disponible(response, date, time, callback) {
         placeRestante = parseInt(horairesJour[i].substring(6));
         heure = parseInt(horairesJour[i].substring(0,2))*60 + parseInt(horairesJour[i].substring(3,5));
 
-        console.log("heure : "+heure+" time : "+time);
+        console.log("heure : "+heure+" time : "+time+" places : "+placeRestante);
 
             // Teste si le créneau est bon
             // Si oui, assez de place => on revoit une heure acceptable, pas assez => On va annoncer qu'il n'y avait pas assez de place
@@ -350,8 +350,9 @@ function disponible(response, date, time, callback) {
             }
         }
     }
+    console.log('array ' + possibleTime.toString());
     let rightTime;
-    if (possibleTime == []) {
+    if (!possibleTime[0] && !possibleTime[1]) {
         return callback (false);
     } else if (!possibleTime[0]) {
         rightTime = possibleTime[1];
