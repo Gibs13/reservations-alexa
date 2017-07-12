@@ -33,7 +33,7 @@ const RESTAURANTS = ["velicious","akabe","la cloche a fromage","habibi","aristid
 const PROPOSITION = ["My suggestion is ","I may suggest you ","A possible choice would be ","I allowed myself to choose ","Maybe "];
 const MISUNDERSTAND = ["Sorry, I didn't understand. ","What did you just said ? ","I didn't heared well. "];
 const AGREE = ["Do you agree ? ","Is it ok for you ? ","Is it alright ? "];
-const FINISH = ["May I place an reservation ? ","Is everything right ? ","May I proceed ? "];
+const FINISH = ["May I place a reservation ? ","Is everything right ? ","May I proceed ? "];
 const READY = ["A table is available ","There's still place ","It's possible to reserve "];
 const SUCCESS = ["Your reservation was completed under the name of ","Everything went well. The table was ordered with the name ","The reservation was made under the name : "];
 const WELCOME = ["Welcome ! You can book a restaurant's table in Strasbourg. ","Hello ! I'm able to get a reservation for a restaurant in Strasbourg. ","Howdy ! Do you want a reservation in a Strasbourg's restaurant ? "];
@@ -94,6 +94,49 @@ const ASK_NAME = ["Under which name should I book the tables ?",
 const ASK_VALUE = ["What's the new value ?",
 "Give me the new value please.",
 "What would you like to try ?"];
+const MONTH = ["January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"];
+const DAY = ["first",
+"second",
+"third",
+"fourth",
+"fifth",
+"sixth",
+"seventh",
+"eighth",
+"ninth",
+"tenth",
+"eleventh",
+"twelfth",
+"thirteenth",
+"fourteenth",
+"fifteenth",
+"sixteenth",
+"seventeenth",
+"eighteenth",
+"nineteenth",
+"twentieth",
+"twenty-first",
+"twenty-second",
+"twenty-third",
+"twenty-fourth",
+"twenty-fifth",
+"twenty-sixth",
+"twenty-seventh",
+"twenty-eighth",
+"twenty-ninth",
+"thirtieth",
+"thirty-first"];
 
 
 const IMAGE = 'https://reservation01.herokuapp.com/images/';
@@ -258,7 +301,27 @@ function createMessage(response) {
     let cln = response.session('cln');
     let cn = response.session('cn');
     let ct = response.session('ct');
-    let message = (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+(cd?"on "+response.session('date').substring(5)+" ":"")+(ct?"at "+response.session('time')+" ":"")+(cln?"with the name "+response.session('name')+" ":"")+". ";
+    let dateMessage;
+    let timeMessage;
+    if (!cd) {dateMessage="";}
+    else {
+    let date = response.session('date');
+    let day = today.getDate();
+    if (day == parseInt(date.substring(8,10))) {
+        dateMessage = "today ";
+    } else if (day+1 == parseInt(date.substring(8,10))) {
+        dateMessage = "tomorrow ";
+    } else if (day+2 == parseInt(date.substring(8,10))) {
+        dateMessage = "in two days ";
+    } else {
+        dateMessage = "on the "+DAY[parseInt(date.slice(8))-1]+" of "+MONTH[parseInt(date.slice(5,7))-1]+" ";
+    }}
+    if (!ct) {timeMessage="";}
+    else {
+        let time = response.session('time');
+        timeMessage = "at "+time.slice(0,2)+" hours "+time.slice(3,5)+" minutes ";
+    }
+    let message = (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+dateMessage+timeMessage+(cln?"with the name "+response.session('name')+" ":"")+". ";
     response.session('cd',0);
     response.session('cr',0);
     response.session('cln',0);
