@@ -510,7 +510,7 @@ function no (request, response) {
 }
 
 function quit (request, response) {
-    response.say(R(BYE));es
+    response.say(R(BYE));
 }
 
 function propose(request, response) {
