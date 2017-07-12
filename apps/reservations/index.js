@@ -172,7 +172,7 @@ function modify(resto, date, creneau, places, valeur, nom, time, date2){
             return false;
         } else {
             console.log("Time set")
-            response.session('time ',T);
+            response.session('time',T);
             return T;
         } });
         
