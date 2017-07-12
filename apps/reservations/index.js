@@ -319,7 +319,7 @@ function createMessage(response) {
     if (!ct) {timeMessage="";}
     else {
         let time = response.session('time');
-        timeMessage = "at "+time.slice(0,2)+" hours "+(time.slice(3,5)!=0?time.slice(3,5)+" minutes ":"");
+        timeMessage = "at "+(time.slice(0,2)<10?time.slice(1,2):time.slice(0,2))+" hours "+(time.slice(3,5)!=0?time.slice(3,5)+" minutes ":"");
     }
     let message = (cn?"for "+response.session('places')+" person"+(response.session('places')>1?"s ":" "):"")+(cr?"the restaurant "+response.session('restaurant').toLowerCase()+" ":"")+dateMessage+timeMessage+(cln?"with the name "+response.session('name')+" ":"")+". ";
     response.session('cd',0);
