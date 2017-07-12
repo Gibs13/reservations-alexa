@@ -99,7 +99,7 @@ function get(resto) {
     })});
 }
 
-function modify(resto, date, creneau, places, valeur, nom, time){
+function modify(resto, date, creneau, places, valeur, nom, time, date2){
   sheets.spreadsheets.values.batchUpdate({
     auth: oauth2Client,
     spreadsheetId: '1DnlKFhV0vNPJ-vQrixpocbcXRlHL5xKJxx5h7IF_qEc',
@@ -111,7 +111,6 @@ function modify(resto, date, creneau, places, valeur, nom, time){
         }
   ]}
     }, function(err, response) {
-        console.log(response);
         if (err) {
             console.log('The API returned an error: ' + err);
             return;
@@ -125,7 +124,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
     insertDataOption: "INSERT_ROWS",
     resource: {
         values: [
-            [resto + " " + response.session('date') + " " + time + " " + places + " " + nom]]
+            [resto + " " + date2 + " " + time + " " + places + " " + nom]]
         }
     }, function(err, response){
         if (err) {
@@ -230,7 +229,7 @@ function modify(resto, date, creneau, places, valeur, nom, time){
                 console.log("valide");
                 let valeur = horaires[date][creneau].substring(0,6) + (placeRestante-places).toString();
                 response.say(R(SUCCESS) + name);
-                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'));
+                modify(restaurant,horaires[date][horaires[date].length-1],String.fromCharCode(66 + creneau),places,valeur,name,response.session('time'),response.session('date'));
                 return;
             } else {
                 console.log("invalide");
