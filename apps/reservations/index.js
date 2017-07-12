@@ -33,13 +33,13 @@ const RESTAURANTS = ["velicious","akabe","la cloche a fromage","habibi","aristid
 const PROPOSITION = ["My suggestion is ","I may suggest you ","A possible choice would be ","I allowed myself to choose ","Maybe "];
 const MISUNDERSTAND = ["Sorry, I didn't understand. ","What did you just said ? ","I didn't heared well. "];
 const AGREE = ["Do you agree ? ","Is it ok for you ? ","Is it alright ? "];
-const FINISH = ["May I place an order ? ","Is everything right ? ","May I proceed ? "];
+const FINISH = ["May I place an reservation ? ","Is everything right ? ","May I proceed ? "];
 const READY = ["A table is available ","There's still place ","It's possible to reserve "];
-const SUCCESS = ["Your reservation was completed under the name of ","Everything went well. The table was ordered with the name ","The order was made under the name : "];
+const SUCCESS = ["Your reservation was completed under the name of ","Everything went well. The table was ordered with the name ","The reservation was made under the name : "];
 const WELCOME = ["Welcome ! You can book a restaurant's table in Strasbourg. ","Hello ! I'm able to get a reservation for a restaurant in Strasbourg. ","Howdy ! Do you want a reservation in a Strasbourg's restaurant ? "];
 const BYE = ["Alright then, come back soon ! ","Well, goodbye. See you soon.","You're leaving yet ? Until next time !"];
 const CHANGE = ["What should I change ? ","Tell me what has to be modified. ","What has to be replaced ? "];
-const NOROOM = ["There is no room ","They haven't got any seats ","It's not possible to order "];
+const NOROOM = ["There is no room ","They haven't got any seats ","It's not possible to book "];
 
 const ASK_RESTO = ["Sure, what's the restaurant ?",
 "Sure, where are you eating ?",
@@ -81,7 +81,7 @@ const ASK_NUMBER = ["How many persons are coming ?",
 "How large a group are you expecting?",
 "And how many people will attend?",
 "A table for how many guests?"];
-const ASK_NAME = ["Under which name should I order ?",
+const ASK_NAME = ["Under which name should I book the tables ?",
 "If you would kindly give me your name.",
 "Please just give me your name",
 "If you would just give me your name.",
@@ -91,6 +91,9 @@ const ASK_NAME = ["Under which name should I order ?",
 "May I have your name, sir?",
 "May I please know what name I should make the reservation under ?",
 "May I have your last name please?"];
+const ASK_VALUE = ["What's the new value ?",
+"Give me the new value please.",
+"What would you like to try ?"];
 
 
 const IMAGE = 'https://reservation01.herokuapp.com/images/';
@@ -284,7 +287,7 @@ function reserver (response) {
             return;
         } else {
             console.log("invalide");
-            response.shouldEndSession(false).say("There was an error, the places are not available anymore. ");
+            response.shouldEndSession(false).say("Sorry, looks like the places are not available anymore. ");
             return;
         }
     });
@@ -321,7 +324,7 @@ function disponible(response, date, time, callback) {
                 if (time != heure) {
                     if (!response.session('proposition')){
                         let message = response.session('message');
-                        message+= "You can only order a bit earlier. ";
+                        message+= "You can only reserve a bit earlier. ";
                         response.session('message',message);
                     }
                 } 
@@ -475,7 +478,7 @@ function reserve (response) {
 
 function change (request, response) {
     if (state == RESERVE_STATE) {
-        response.say("What's the new value ? ").shouldEndSession(false);
+        response.say(R(ASK_VALUE)).shouldEndSession(false);
         return;
     } else {
         response.say("You cannot change right now. ").shouldEndSession(false);
@@ -520,6 +523,7 @@ function quit (request, response) {
 }
 
 function propose(request, response) {
+    response.session('state',RESERVE_STATE);
     let restaurants = ['VELICIOUS','AKABE','LA CLOCHE A FROMAGE'];
     let prompt = 'Here are some cool restaurants. ';
     response.shouldEndSession(false).say(prompt+descriptions[restaurants[0]][0]+'. '+descriptions[restaurants[0]][1]+descriptions[restaurants[1]][0]+'. '+descriptions[restaurants[1]][1]+descriptions[restaurants[2]][0]+'. '+descriptions[restaurants[2]][1]+'.');   
