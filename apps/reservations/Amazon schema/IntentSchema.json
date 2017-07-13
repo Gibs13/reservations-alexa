@@ -1,95 +1,86 @@
 {
   "intents": [
     {
-      "intent": "Quit"
+      "intent": "AMAZON.CancelIntent"
     },
     {
-      "intent": "Reserve",
-      "slots": [
-        {
-          "name": "dateslot",
-          "type": "AMAZON.DATE"
-        },
-        {
-          "name": "restaurantslot",
-          "type": "RESTAURANT"
-        },
-        {
-          "name": "timeslot",
-          "type": "AMAZON.TIME"
-        },
-        {
-          "name": "numberslot",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.MoreIntent"
+    },
+    {
+      "intent": "AMAZON.NavigateHomeIntent"
+    },
+    {
+      "intent": "AMAZON.NavigateSettingsIntent"
+    },
+    {
+      "intent": "AMAZON.NextIntent"
+    },
+    {
+      "intent": "AMAZON.PageDownIntent"
+    },
+    {
+      "intent": "AMAZON.PageUpIntent"
+    },
+    {
+      "intent": "AMAZON.PreviousIntent"
+    },
+    {
+      "intent": "AMAZON.ScrollDownIntent"
+    },
+    {
+      "intent": "AMAZON.ScrollLeftIntent"
+    },
+    {
+      "intent": "AMAZON.ScrollRightIntent"
+    },
+    {
+      "intent": "AMAZON.ScrollUpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "Change"
     },
     {
       "intent": "NoIntent"
     },
     {
-      "intent": "Change_date",
+      "intent": "Propose"
+    },
+    {
+      "intent": "Quit"
+    },
+    {
       "slots": [
+        {
+          "name": "restaurantslot",
+          "type": "RESTAURANT"
+        },
         {
           "name": "dateslot",
           "type": "AMAZON.DATE"
         },
         {
-          "name": "datetimeslot",
-          "type": "AMAZON.DATE"
-        }
-      ]
-    },
-    {
-      "intent": "Change_time",
-      "slots": [
-        {
           "name": "timeslot",
           "type": "AMAZON.TIME"
-        }
-      ]
-    },
-    {
-      "intent": "Propose"
-    },
-    {
-      "intent": "Change_restaurant",
-      "slots": [
-        {
-          "name": "restaurantslot",
-          "type": "RESTAURANT"
-        }
-      ]
-    },
-    {
-      "intent": "DefaultWelcomeIntent"
-    },
-    {
-      "intent": "Answer_propose",
-      "slots": [
-        {
-          "name": "restaurantslot",
-          "type": "RESTAURANT"
-        }
-      ]
-    },
-    {
-      "intent": "Change_number",
-      "slots": [
+        },
         {
           "name": "numberslot",
           "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "nameslot",
+          "type": "AMAZON.LITERAL"
         }
-      ]
+      ],
+      "intent": "Reserve"
     },
     {
       "intent": "YesIntent"
-    },
-    {
-      "intent": "Next"
-    },
-    {
-      "intent": "Change_name"
     }
   ]
 }

@@ -1,108 +1,117 @@
-Quit	bye
-Quit	cancel
-Quit	i have to go
-Quit	stop
-Reserve	book {timeslot}
-Reserve	hello! can you help me book a reservation please?
-Reserve	hello, i need to make a dinner reservation.
-Reserve	hi, could you help me? i need to make a dinner reservation.
-Reserve	hi, i would like to make a dinner reservation.
-Reserve	i m looking where should i go to eat with {numberslot} person
-Reserve	i m looking where should i go to eat with {numberslot} persons
-Reserve	i may eat at {restaurantslot} {timeslot}
-Reserve	i want to book
-Reserve	i want to eat at the restaurant {restaurantslot} {dateslot} {timeslot}
-Reserve	i want to eat at {restaurantslot} restaurant in {dateslot} for {numberslot} person
-Reserve	i want to eat at {restaurantslot} restaurant in {dateslot} for {numberslot} persons
-Reserve	i want to eat at {restaurantslot} restaurant {dateslot}
-Reserve	i want to eat {dateslot}
-Reserve	i want to order a table at {restaurantslot}
-Reserve	i want to order for {dateslot}
-Reserve	i would like to make a reservation for {dateslot}
-Reserve	i would like to reserve a table at {restaurantslot} .
-Reserve	i would like to reserve a table for coming {dateslot} .
-Reserve	i would like to reserve a table {dateslot} .
-Reserve	i'd like to make a reservation.
-Reserve	i'd like to reserve a table for dinner.
-Reserve	look if a seat is available in {restaurantslot}
-Reserve	new order
-Reserve	order a table in {restaurantslot} {dateslot} {timeslot} for {numberslot} person
-Reserve	order a table in {restaurantslot} {dateslot} {timeslot} for {numberslot} persons
-Reserve	take a seat in {restaurantslot} for {dateslot}
-NoIntent	absolute not
-NoIntent	absolutely not
-NoIntent	don't reserve
-NoIntent	no
-NoIntent	nope
-Change_date	{dateslot}
-Change_date	{dateslot} night is when we need the reservation for .
-Change_date	can i reserve for this {dateslot}
-Change_date	change the date to {dateslot}
-Change_date	i want to book for {dateslot}
-Change_date	i want to book {dateslot}
-Change_date	is it possible to change my reservation for this friday to {dateslot} instead
-Change_date	is it possible to change my reservation {datetimeslot} to {dateslot} instead
-Change_date	modify the date
-Change_date	set the date to {dateslot}
-Change_date	the date be {dateslot}
-Change_date	the date was {dateslot}
-Change_date	try {dateslot}
-Change_date	we will be coming to the restaurant {dateslot} .
-Change_date	we will need the reservation for {dateslot} night .
-Change_time	{timeslot}
-Change_time	{timeslot} would be better
-Change_time	can you reserve a table {timeslot}
-Change_time	change the time for {timeslot}
-Change_time	i would rather eat {timeslot}
-Change_time	modify the time
-Change_time	we would prefer {timeslot}
-Propose	i don't know what restaurant i can choose.
-Propose	i don't know, what are your suggestions
-Propose	i want a list of restaurants.
-Propose	tell me in which places i could make a reservation .
-Propose	tell me in which places i could make a reservation.
-Propose	what are the suggestion
-Propose	what are the suggestions ?
-Propose	what are you propose
-Propose	what are you proposing ?
-Propose	what are you suggest
-Propose	what are you suggesting ?
-Change_restaurant	{restaurantslot}
-Change_restaurant	change the restaurant for {restaurantslot}
-Change_restaurant	i would like to order at {restaurantslot}
-Change_restaurant	set the restaurant to {restaurantslot}
-Change_restaurant	the restaurant would be {restaurantslot}
-DefaultWelcomeIntent	hello
-DefaultWelcomeIntent	hey
-DefaultWelcomeIntent	hi
-DefaultWelcomeIntent	restart
-DefaultWelcomeIntent	start
-DefaultWelcomeIntent	start again
-Answer_propose	{restaurantslot}
-Answer_propose	i choose {restaurantslot}
-Answer_propose	i want to order at {restaurantslot}
-Change_number	{numberslot} person
-Change_number	{numberslot} persons
-Change_number	change the number
-Change_number	i would like to reserve for a party of {numberslot} please
-Change_number	modify the number for only {numberslot} person
-Change_number	set the number to {numberslot}
-Change_number	there will be {numberslot} of us .
-Change_number	we need a reservation for {numberslot} .
-Change_number	we re {numberslot}
-YesIntent	absolute
-YesIntent	absolutely
-YesIntent	obvious
-YesIntent	obviously
-YesIntent	sure
-YesIntent	ya
-YesIntent	yas
-YesIntent	yes
-Next	next
-Change_name	change the name
-Change_name	i said my name was
-Change_name	modify my name
-Change_name	my name is not this
-Change_name	no my name is
-Change_name	set my name
-Change_name	the last name is .
+Change modify the date
+Change change the name
+Change modify my name
+Change change the number
+Change modify the time
+NoIntent absolute not
+NoIntent absolutely not
+NoIntent don't reserve
+NoIntent no
+NoIntent nope
+Propose What restaurants could i choose
+Propose a list of restaurants
+Propose suggestions
+Propose i don't know what restaurant i can choose
+Propose i don't know what are your suggestions
+Propose i want a list of restaurants
+Propose tell me in which places i could make a reservation
+Propose what are the suggestion
+Propose what are the suggestions
+Propose what are you propose
+Propose what are you proposing
+Propose what are you suggest
+Propose what are you suggesting
+Quit bye
+Quit cancel
+Quit i have to go
+Quit stop
+Quit I want to stop
+Quit I'm done
+Reserve Could you make a reservation in {restaurantslot} for {dateslot}
+Reserve In that case I would prefer to eat at {timeslot}
+Reserve {restaurantslot} had tasteful dishes book {numberslot} seat there
+Reserve i choose {restaurantslot}
+Reserve i want to order at {restaurantslot}
+Reserve {dateslot} night is when we need the reservation for
+Reserve can i reserve for this {dateslot}
+Reserve change the date to {dateslot}
+Reserve i want to book for {dateslot}
+Reserve i want to book {dateslot}
+Reserve is it possible to change my reservation for this friday to {dateslot} instead
+Reserve is it possible to change my reservation to {dateslot} instead
+Reserve set the date to {dateslot}
+Reserve the date be {dateslot}
+Reserve the date was {dateslot}
+Reserve try {dateslot}
+Reserve we will be coming to the restaurant {dateslot}
+Reserve we will need the reservation for {dateslot} night
+Reserve i said my name was {Gabriel|nameslot}
+Reserve my name is {Al|nameslot} not this
+Reserve no my name is {Jean|nameslot}
+Reserve set my name
+Reserve the last name is {Meyer|nameslot}
+Reserve The name
+Reserve {numberslot} person
+Reserve {numberslot} persons
+Reserve i would like to reserve for a party of {numberslot} please
+Reserve modify the number for only {numberslot} person
+Reserve set the number to {numberslot}
+Reserve there will be {numberslot} of us
+Reserve we need a reservation for {numberslot}
+Reserve we re {numberslot}
+Reserve change the restaurant for {restaurantslot}
+Reserve i would like to order at {restaurantslot}
+Reserve set the restaurant to {restaurantslot}
+Reserve the restaurant would be {restaurantslot}
+Reserve {timeslot} would be better
+Reserve can you reserve a table {timeslot}
+Reserve change the time for {timeslot}
+Reserve i would rather eat {timeslot}
+Reserve we would prefer {timeslot}
+Reserve under the name {Fouchter|nameslot}
+Reserve {restaurantslot}
+Reserve {dateslot}
+Reserve {timeslot}
+Reserve {numberslot}
+Reserve {Monica|nameslot} is my name
+Reserve book {timeslot}
+Reserve can you help me book a reservation please
+Reserve i need to make a dinner reservation
+Reserve i would like to make a dinner reservation
+Reserve i m looking where should i go to eat with {numberslot} person
+Reserve i m looking where should i go to eat with {numberslot} persons
+Reserve i may eat at {restaurantslot} {timeslot}
+Reserve i want to book
+Reserve i want to eat at the restaurant {restaurantslot} {dateslot} {timeslot}
+Reserve i want to eat at {restaurantslot} restaurant in {dateslot} for {numberslot} person
+Reserve i want to eat at {restaurantslot} restaurant in {dateslot} for {numberslot} persons
+Reserve i want to eat at {restaurantslot} restaurant {dateslot}
+Reserve i want to eat {dateslot}
+Reserve i want to order a table at {restaurantslot}
+Reserve i want to order for {dateslot}
+Reserve i would like to make a reservation for {dateslot}
+Reserve i would like to reserve a table at {restaurantslot}
+Reserve i would like to reserve a table for coming {dateslot}
+Reserve i would like to reserve a table {dateslot}
+Reserve i'd like to make a reservation
+Reserve i'd like to reserve a table for dinner
+Reserve look if a seat is available in {restaurantslot}
+Reserve new order
+Reserve book a table in {restaurantslot} {dateslot} {timeslot} for {numberslot} person
+Reserve book a table in {restaurantslot} {dateslot} {timeslot} for {numberslot} persons
+Reserve take a seat in {restaurantslot} for {dateslot}
+Reserve I want to book a table in {restaurantslot} for {dateslot}
+Reserve I will eat {dateslot}
+Reserve With the name {Seb|nameslot}
+Reserve The last name is {Hug|nameslot}
+Reserve My name is {Antoine|nameslot}
+YesIntent absolute
+YesIntent absolutely
+YesIntent obvious
+YesIntent obviously
+YesIntent sure
+YesIntent ya
+YesIntent yas
+YesIntent yes
+YesIntent All good
+YesIntent good
